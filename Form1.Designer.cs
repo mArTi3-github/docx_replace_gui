@@ -40,9 +40,7 @@
             this.MarkersDocOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.InputDirFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ReplaceInCopiesCheckBox = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ReplaceMethodComboBox = new System.Windows.Forms.ComboBox();
-            this.ReplaceMethodHelpLabel = new System.Windows.Forms.Label();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // InputDirLabel
@@ -133,6 +131,7 @@
             this.ReplaceInCopiesCheckBox.AutoSize = true;
             this.ReplaceInCopiesCheckBox.Checked = true;
             this.ReplaceInCopiesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ReplaceInCopiesCheckBox.Enabled = false;
             this.ReplaceInCopiesCheckBox.Location = new System.Drawing.Point(15, 81);
             this.ReplaceInCopiesCheckBox.Name = "ReplaceInCopiesCheckBox";
             this.ReplaceInCopiesCheckBox.Size = new System.Drawing.Size(129, 17);
@@ -140,44 +139,11 @@
             this.ReplaceInCopiesCheckBox.Text = "Заменять на копиях";
             this.ReplaceInCopiesCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 120);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Метод замены";
-            // 
-            // ReplaceMethodComboBox
-            // 
-            this.ReplaceMethodComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ReplaceMethodComboBox.Items.AddRange(new object[] {
-            "Text",
-            "Copy-paste"});
-            this.ReplaceMethodComboBox.Location = new System.Drawing.Point(100, 117);
-            this.ReplaceMethodComboBox.Name = "ReplaceMethodComboBox";
-            this.ReplaceMethodComboBox.Size = new System.Drawing.Size(121, 21);
-            this.ReplaceMethodComboBox.TabIndex = 12;
-            // 
-            // ReplaceMethodHelpLabel
-            // 
-            this.ReplaceMethodHelpLabel.AutoSize = true;
-            this.ReplaceMethodHelpLabel.Location = new System.Drawing.Point(228, 120);
-            this.ReplaceMethodHelpLabel.Name = "ReplaceMethodHelpLabel";
-            this.ReplaceMethodHelpLabel.Size = new System.Drawing.Size(526, 13);
-            this.ReplaceMethodHelpLabel.TabIndex = 13;
-            this.ReplaceMethodHelpLabel.Text = "Copy-paste - для кусков больше 256 символов либо при сложном форматировании (рису" +
-    "нки, таблицы)";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(757, 450);
-            this.Controls.Add(this.ReplaceMethodHelpLabel);
-            this.Controls.Add(this.ReplaceMethodComboBox);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.ReplaceInCopiesCheckBox);
             this.Controls.Add(this.WorklogLabel);
             this.Controls.Add(this.StratButton);
@@ -209,9 +175,7 @@
         private System.Windows.Forms.OpenFileDialog MarkersDocOpenFileDialog;
         private System.Windows.Forms.FolderBrowserDialog InputDirFolderBrowserDialog;
         private System.Windows.Forms.CheckBox ReplaceInCopiesCheckBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox ReplaceMethodComboBox;
-        private System.Windows.Forms.Label ReplaceMethodHelpLabel;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 
