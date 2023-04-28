@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.InputDirLabel = new System.Windows.Forms.Label();
-            this.MarkersFocPathLabel = new System.Windows.Forms.Label();
+            this.MarkersDocPathLabel = new System.Windows.Forms.Label();
             this.InputDirPathTextBox = new System.Windows.Forms.TextBox();
             this.MarkersDocPathTextBox = new System.Windows.Forms.TextBox();
             this.InputDirPathFindButton = new System.Windows.Forms.Button();
@@ -37,10 +37,14 @@
             this.WorklogTextBox = new System.Windows.Forms.TextBox();
             this.StratButton = new System.Windows.Forms.Button();
             this.WorklogLabel = new System.Windows.Forms.Label();
-            this.MarkersDocOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.DocOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.InputDirFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.ReplaceInCopiesCheckBox = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.TextBlocksPathLabel = new System.Windows.Forms.Label();
+            this.TextBlocksDocPathTextBox = new System.Windows.Forms.TextBox();
+            this.TextBlocksDocFindButton = new System.Windows.Forms.Button();
+            this.GetAllMarkersButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // InputDirLabel
@@ -52,14 +56,14 @@
             this.InputDirLabel.TabIndex = 0;
             this.InputDirLabel.Text = "Папка с документами для обработки";
             // 
-            // MarkersFocPathLabel
+            // MarkersDocPathLabel
             // 
-            this.MarkersFocPathLabel.AutoSize = true;
-            this.MarkersFocPathLabel.Location = new System.Drawing.Point(12, 49);
-            this.MarkersFocPathLabel.Name = "MarkersFocPathLabel";
-            this.MarkersFocPathLabel.Size = new System.Drawing.Size(166, 13);
-            this.MarkersFocPathLabel.TabIndex = 1;
-            this.MarkersFocPathLabel.Text = "Путь к документу с маркерами";
+            this.MarkersDocPathLabel.AutoSize = true;
+            this.MarkersDocPathLabel.Location = new System.Drawing.Point(12, 49);
+            this.MarkersDocPathLabel.Name = "MarkersDocPathLabel";
+            this.MarkersDocPathLabel.Size = new System.Drawing.Size(166, 13);
+            this.MarkersDocPathLabel.TabIndex = 1;
+            this.MarkersDocPathLabel.Text = "Путь к документу с маркерами";
             // 
             // InputDirPathTextBox
             // 
@@ -100,6 +104,7 @@
             this.WorklogTextBox.Location = new System.Drawing.Point(15, 178);
             this.WorklogTextBox.Multiline = true;
             this.WorklogTextBox.Name = "WorklogTextBox";
+            this.WorklogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.WorklogTextBox.Size = new System.Drawing.Size(730, 260);
             this.WorklogTextBox.TabIndex = 6;
             // 
@@ -122,9 +127,9 @@
             this.WorklogLabel.TabIndex = 8;
             this.WorklogLabel.Text = "Лог работы:";
             // 
-            // MarkersDocOpenFileDialog
+            // DocOpenFileDialog
             // 
-            this.MarkersDocOpenFileDialog.Filter = "Документы в формате docx|*.docx";
+            this.DocOpenFileDialog.Filter = "Документы в формате docx|*.docx";
             // 
             // ReplaceInCopiesCheckBox
             // 
@@ -132,18 +137,58 @@
             this.ReplaceInCopiesCheckBox.Checked = true;
             this.ReplaceInCopiesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ReplaceInCopiesCheckBox.Enabled = false;
-            this.ReplaceInCopiesCheckBox.Location = new System.Drawing.Point(15, 81);
+            this.ReplaceInCopiesCheckBox.Location = new System.Drawing.Point(15, 121);
             this.ReplaceInCopiesCheckBox.Name = "ReplaceInCopiesCheckBox";
             this.ReplaceInCopiesCheckBox.Size = new System.Drawing.Size(129, 17);
             this.ReplaceInCopiesCheckBox.TabIndex = 9;
             this.ReplaceInCopiesCheckBox.Text = "Заменять на копиях";
             this.ReplaceInCopiesCheckBox.UseVisualStyleBackColor = true;
             // 
+            // TextBlocksPathLabel
+            // 
+            this.TextBlocksPathLabel.AutoSize = true;
+            this.TextBlocksPathLabel.Location = new System.Drawing.Point(12, 88);
+            this.TextBlocksPathLabel.Name = "TextBlocksPathLabel";
+            this.TextBlocksPathLabel.Size = new System.Drawing.Size(189, 13);
+            this.TextBlocksPathLabel.TabIndex = 10;
+            this.TextBlocksPathLabel.Text = "Путь к документу с блоками текста";
+            // 
+            // TextBlocksDocPathTextBox
+            // 
+            this.TextBlocksDocPathTextBox.Location = new System.Drawing.Point(214, 88);
+            this.TextBlocksDocPathTextBox.Name = "TextBlocksDocPathTextBox";
+            this.TextBlocksDocPathTextBox.Size = new System.Drawing.Size(455, 20);
+            this.TextBlocksDocPathTextBox.TabIndex = 11;
+            // 
+            // TextBlocksDocFindButton
+            // 
+            this.TextBlocksDocFindButton.Location = new System.Drawing.Point(675, 88);
+            this.TextBlocksDocFindButton.Name = "TextBlocksDocFindButton";
+            this.TextBlocksDocFindButton.Size = new System.Drawing.Size(75, 23);
+            this.TextBlocksDocFindButton.TabIndex = 12;
+            this.TextBlocksDocFindButton.Text = "...";
+            this.TextBlocksDocFindButton.UseVisualStyleBackColor = true;
+            this.TextBlocksDocFindButton.Click += new System.EventHandler(this.TextBlocksDocFindButton_Click);
+            // 
+            // GetAllMarkersButton
+            // 
+            this.GetAllMarkersButton.Location = new System.Drawing.Point(546, 149);
+            this.GetAllMarkersButton.Name = "GetAllMarkersButton";
+            this.GetAllMarkersButton.Size = new System.Drawing.Size(199, 23);
+            this.GetAllMarkersButton.TabIndex = 13;
+            this.GetAllMarkersButton.Text = "Найти все маркеры в документах";
+            this.GetAllMarkersButton.UseVisualStyleBackColor = true;
+            this.GetAllMarkersButton.Click += new System.EventHandler(this.GetAllMarkersButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(757, 450);
+            this.Controls.Add(this.GetAllMarkersButton);
+            this.Controls.Add(this.TextBlocksDocFindButton);
+            this.Controls.Add(this.TextBlocksDocPathTextBox);
+            this.Controls.Add(this.TextBlocksPathLabel);
             this.Controls.Add(this.ReplaceInCopiesCheckBox);
             this.Controls.Add(this.WorklogLabel);
             this.Controls.Add(this.StratButton);
@@ -152,7 +197,7 @@
             this.Controls.Add(this.InputDirPathFindButton);
             this.Controls.Add(this.MarkersDocPathTextBox);
             this.Controls.Add(this.InputDirPathTextBox);
-            this.Controls.Add(this.MarkersFocPathLabel);
+            this.Controls.Add(this.MarkersDocPathLabel);
             this.Controls.Add(this.InputDirLabel);
             this.Name = "Form1";
             this.Text = "Docx-replacer";
@@ -164,7 +209,7 @@
         #endregion
 
         private System.Windows.Forms.Label InputDirLabel;
-        private System.Windows.Forms.Label MarkersFocPathLabel;
+        private System.Windows.Forms.Label MarkersDocPathLabel;
         private System.Windows.Forms.TextBox InputDirPathTextBox;
         private System.Windows.Forms.TextBox MarkersDocPathTextBox;
         private System.Windows.Forms.Button InputDirPathFindButton;
@@ -172,10 +217,14 @@
         private System.Windows.Forms.TextBox WorklogTextBox;
         private System.Windows.Forms.Button StratButton;
         private System.Windows.Forms.Label WorklogLabel;
-        private System.Windows.Forms.OpenFileDialog MarkersDocOpenFileDialog;
+        private System.Windows.Forms.OpenFileDialog DocOpenFileDialog;
         private System.Windows.Forms.FolderBrowserDialog InputDirFolderBrowserDialog;
         private System.Windows.Forms.CheckBox ReplaceInCopiesCheckBox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Label TextBlocksPathLabel;
+        private System.Windows.Forms.TextBox TextBlocksDocPathTextBox;
+        private System.Windows.Forms.Button TextBlocksDocFindButton;
+        private System.Windows.Forms.Button GetAllMarkersButton;
     }
 }
 
