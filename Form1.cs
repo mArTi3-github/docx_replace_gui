@@ -138,6 +138,12 @@ namespace docx_replace_GUI
                 {
                     Document curDocument = word.Documents.Open(curFilePath);
 
+                    //Включение режима отслеживания изменений в Word перед началом обработки документа по маркерам в таблице
+                    if (ReplaceInTrackRevisionsModeChechBox.Checked)
+                    {
+                        curDocument.TrackRevisions = true;
+                    }
+
                     WorklogTextBox.Text +=  "Обрабатываемый файл:" + curFilePath + "\"\r\n";
 
                     //Обработка замен по таблице
@@ -145,13 +151,20 @@ namespace docx_replace_GUI
                     {
                         ReplaceMarkers(curDocument, markersDocument);
                     }
+                    //Отключение режима отслеживания изменений в Word после завершения обработки документа
+                    if (ReplaceInTrackRevisionsModeChechBox.Checked)
+                    {
+                        curDocument.TrackRevisions = false;
+                    }
 
                     //обработка замен по комментам
-                    if(TextBlocksDocPathTextBox.Text != "")
+                    if (TextBlocksDocPathTextBox.Text != "")
                     {
                         ReplaceTextBlocks(curDocument, textBlocksDocument, word, markerRegex);
                     }
-                    
+
+
+
                     curDocument.Save();
                     curDocument.Close();
                 }
@@ -203,11 +216,12 @@ namespace docx_replace_GUI
 
 
         //Static functions:
-        public static void ReplaceMarkers(Document inputDoc, Document markersDoc)
+        public void ReplaceMarkers(Document inputDoc, Document markersDoc)
         {
             string replacementText;
             string markerText;
             Table markersTable = markersDoc.Tables[1];//!Добавить обработку ошибки, когда в доке с маркерами нет таблицы
+
             foreach (Row row in markersTable.Rows)
             {
                 markerText = row.Cells[1].Range.Text.TrimEnd('\r', '\a', '\n');
@@ -232,7 +246,7 @@ namespace docx_replace_GUI
             }
         }
 
-        public static void ReplaceTextBlocks(Document inputDoc, Document textBlocksDoc, Microsoft.Office.Interop.Word.Application word, Regex markerRegex)
+        public void ReplaceTextBlocks(Document inputDoc, Document textBlocksDoc, Microsoft.Office.Interop.Word.Application word, Regex markerRegex)
         {
             string curMarkerLabelText;
             string curCommentInCurDocText;
