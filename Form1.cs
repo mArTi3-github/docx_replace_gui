@@ -115,7 +115,8 @@ namespace docx_replace_GUI
             string textBlocksFilePath = TextBlocksDocPathTextBox.Text;
 
             Microsoft.Office.Interop.Word.Application word = new Microsoft.Office.Interop.Word.Application();
-            word.Visible = true;//!потом можно отключить видимость
+            
+            word.Visible = ShowWordWindowsCheckBox.Checked;
 
             Document markersDocument = word.Documents.Open(markersFilePath);
             Document textBlocksDocument = word.Documents.Open(textBlocksFilePath);
@@ -307,7 +308,8 @@ namespace docx_replace_GUI
             //Match match;
 
             Microsoft.Office.Interop.Word.Application word = new Microsoft.Office.Interop.Word.Application();
-            word.Visible = true;//!потом можно отключить видимость
+
+            word.Visible = ShowWordWindowsCheckBox.Checked;
 
 
             string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)

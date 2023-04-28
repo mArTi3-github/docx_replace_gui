@@ -46,6 +46,7 @@
             this.TextBlocksDocFindButton = new System.Windows.Forms.Button();
             this.GetAllMarkersButton = new System.Windows.Forms.Button();
             this.ReplaceInTrackRevisionsModeChechBox = new System.Windows.Forms.CheckBox();
+            this.ShowWordWindowsCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // InputDirLabel
@@ -184,18 +185,31 @@
             // ReplaceInTrackRevisionsModeChechBox
             // 
             this.ReplaceInTrackRevisionsModeChechBox.AutoSize = true;
-            this.ReplaceInTrackRevisionsModeChechBox.Location = new System.Drawing.Point(214, 121);
+            this.ReplaceInTrackRevisionsModeChechBox.Location = new System.Drawing.Point(170, 121);
             this.ReplaceInTrackRevisionsModeChechBox.Name = "ReplaceInTrackRevisionsModeChechBox";
             this.ReplaceInTrackRevisionsModeChechBox.Size = new System.Drawing.Size(368, 17);
             this.ReplaceInTrackRevisionsModeChechBox.TabIndex = 14;
             this.ReplaceInTrackRevisionsModeChechBox.Text = "Заменять в режиме исправлений (только для маркеров в таблице)";
             this.ReplaceInTrackRevisionsModeChechBox.UseVisualStyleBackColor = true;
             // 
+            // ShowWordWindowsCheckBox
+            // 
+            this.ShowWordWindowsCheckBox.AutoSize = true;
+            this.ShowWordWindowsCheckBox.Checked = true;
+            this.ShowWordWindowsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowWordWindowsCheckBox.Location = new System.Drawing.Point(546, 121);
+            this.ShowWordWindowsCheckBox.Name = "ShowWordWindowsCheckBox";
+            this.ShowWordWindowsCheckBox.Size = new System.Drawing.Size(144, 17);
+            this.ShowWordWindowsCheckBox.TabIndex = 15;
+            this.ShowWordWindowsCheckBox.Text = "Отображать окна Word";
+            this.ShowWordWindowsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(757, 450);
+            this.Controls.Add(this.ShowWordWindowsCheckBox);
             this.Controls.Add(this.ReplaceInTrackRevisionsModeChechBox);
             this.Controls.Add(this.GetAllMarkersButton);
             this.Controls.Add(this.TextBlocksDocFindButton);
@@ -238,6 +252,7 @@
         private System.Windows.Forms.Button TextBlocksDocFindButton;
         private System.Windows.Forms.Button GetAllMarkersButton;
         private System.Windows.Forms.CheckBox ReplaceInTrackRevisionsModeChechBox;
+        private System.Windows.Forms.CheckBox ShowWordWindowsCheckBox;
     }
 }
 
