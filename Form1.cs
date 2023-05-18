@@ -216,7 +216,6 @@ namespace docx_replace_GUI
 
 
 
-        //Static functions:
         public void ReplaceMarkers(Document inputDoc, Document markersDoc)
         {
             string replacementText;
