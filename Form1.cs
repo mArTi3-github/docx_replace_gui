@@ -69,12 +69,12 @@ namespace docx_replace_GUI
                 MessageBox.Show("Выберите хотя бы один документ с данными для замены");
                 return;
             }
-            else if (!File.Exists(MarkersDocPathTextBox.Text))
+            else if (MarkersDocPathTextBox.Text != "" && !File.Exists(MarkersDocPathTextBox.Text))
             {
                 MessageBox.Show("Документ с маркерами не найден");
                 return;
             }
-            else if (!File.Exists(TextBlocksDocPathTextBox.Text))
+            else if (TextBlocksDocPathTextBox.Text != "" && !File.Exists(TextBlocksDocPathTextBox.Text))
             {
                 MessageBox.Show("Документ с текстовыми блоками не найден");
                 return;
@@ -181,8 +181,10 @@ namespace docx_replace_GUI
                     continue;
                 }
             }
-            markersDocument.Close();
-            textBlocksDocument.Close();
+            if(markersDocument != null)
+                markersDocument.Close();
+            if (textBlocksDocument != null)
+                textBlocksDocument.Close();
             word.Quit();
             WorklogTextBox.Text += "Обработка завершена" + "\r\n";
         }
