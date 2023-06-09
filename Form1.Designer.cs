@@ -39,7 +39,7 @@
             this.WorklogLabel = new System.Windows.Forms.Label();
             this.DocOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.InputDirFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.ReplaceInCopiesCheckBox = new System.Windows.Forms.CheckBox();
+            this.MakeBackupCheckBox = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.TextBlocksPathLabel = new System.Windows.Forms.Label();
             this.TextBlocksDocPathTextBox = new System.Windows.Forms.TextBox();
@@ -133,18 +133,17 @@
             // 
             this.DocOpenFileDialog.Filter = "Документы в формате docx|*.docx";
             // 
-            // ReplaceInCopiesCheckBox
+            // MakeBackupCheckBox
             // 
-            this.ReplaceInCopiesCheckBox.AutoSize = true;
-            this.ReplaceInCopiesCheckBox.Checked = true;
-            this.ReplaceInCopiesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ReplaceInCopiesCheckBox.Enabled = false;
-            this.ReplaceInCopiesCheckBox.Location = new System.Drawing.Point(15, 121);
-            this.ReplaceInCopiesCheckBox.Name = "ReplaceInCopiesCheckBox";
-            this.ReplaceInCopiesCheckBox.Size = new System.Drawing.Size(129, 17);
-            this.ReplaceInCopiesCheckBox.TabIndex = 9;
-            this.ReplaceInCopiesCheckBox.Text = "Заменять на копиях";
-            this.ReplaceInCopiesCheckBox.UseVisualStyleBackColor = true;
+            this.MakeBackupCheckBox.AutoSize = true;
+            this.MakeBackupCheckBox.Checked = true;
+            this.MakeBackupCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MakeBackupCheckBox.Location = new System.Drawing.Point(15, 121);
+            this.MakeBackupCheckBox.Name = "MakeBackupCheckBox";
+            this.MakeBackupCheckBox.Size = new System.Drawing.Size(140, 17);
+            this.MakeBackupCheckBox.TabIndex = 9;
+            this.MakeBackupCheckBox.Text = "Backup входной папки";
+            this.MakeBackupCheckBox.UseVisualStyleBackColor = true;
             // 
             // TextBlocksPathLabel
             // 
@@ -215,7 +214,7 @@
             this.Controls.Add(this.TextBlocksDocFindButton);
             this.Controls.Add(this.TextBlocksDocPathTextBox);
             this.Controls.Add(this.TextBlocksPathLabel);
-            this.Controls.Add(this.ReplaceInCopiesCheckBox);
+            this.Controls.Add(this.MakeBackupCheckBox);
             this.Controls.Add(this.WorklogLabel);
             this.Controls.Add(this.StratButton);
             this.Controls.Add(this.WorklogTextBox);
@@ -245,7 +244,7 @@
         private System.Windows.Forms.Label WorklogLabel;
         private System.Windows.Forms.OpenFileDialog DocOpenFileDialog;
         private System.Windows.Forms.FolderBrowserDialog InputDirFolderBrowserDialog;
-        private System.Windows.Forms.CheckBox ReplaceInCopiesCheckBox;
+        private System.Windows.Forms.CheckBox MakeBackupCheckBox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label TextBlocksPathLabel;
         private System.Windows.Forms.TextBox TextBlocksDocPathTextBox;

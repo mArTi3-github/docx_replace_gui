@@ -17,7 +17,7 @@ namespace docx_replace_GUI
     public partial class Form1 : Form
     {
         //Путь для сохранения резульатов задается жестко, чтобы случайно не удалить ничего лишнего
-        string ResultsPathString = "results";
+        string BackupPathString = "backup";
         Regex markerRegex = new Regex(@"\{\{ \w* \}\}");
         Regex excludeTmpDocxFilesReg = new Regex(@"\\~\$");//Regex для исключения из списка временных docx-файлов, имена которых начинаются с "~$"
 
@@ -80,15 +80,25 @@ namespace docx_replace_GUI
                 return;
             }
 
-            if(!Directory.Exists(ResultsPathString))
-                Directory.CreateDirectory(ResultsPathString);
+            if(!Directory.Exists(BackupPathString))
+                Directory.CreateDirectory(BackupPathString);
 
-            if (Directory.EnumerateFileSystemEntries(ResultsPathString).Any())
+            if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
             {
-                DialogResult dr = MessageBox.Show("Папка для сохранения результатов не пуста, очистить ее перед запуском?", "Предупреждение", MessageBoxButtons.YesNoCancel);
+                DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, очистить ее перед запуском?", "Предупреждение", MessageBoxButtons.YesNoCancel);
                 if (dr == DialogResult.Yes)
                 {
-                    Directory.Delete(ResultsPathString, true);
+                    try
+                    {
+                        Directory.Delete(BackupPathString, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Не удалось очистить папку с резервными копиями");
+                        WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
+                        return;
+                    }
+                    
                 }
                 else if (dr == DialogResult.Cancel)
                 {
@@ -96,19 +106,15 @@ namespace docx_replace_GUI
                 }
             }
 
-            string inputDir = "";
+            string inputDir = InputDirPathTextBox.Text;
 
-            if (ReplaceInCopiesCheckBox.Checked)
+            if (MakeBackupCheckBox.Checked)
             {
                 DirectoryInfo srcDI = new DirectoryInfo(InputDirPathTextBox.Text);
-                DirectoryInfo destDI = new DirectoryInfo(ResultsPathString);
-                CopyAll(srcDI, destDI);
+                DirectoryInfo destDI = new DirectoryInfo(BackupPathString);
+                CopyAllDocx(srcDI, destDI);
                 WorklogTextBox.Text += "Входные файлы скопированы в  \"" + destDI.FullName + "\"\r\n";
                 inputDir = destDI.FullName;
-            }
-            else
-            {
-                inputDir = InputDirPathTextBox.Text;
             }
 
             string markersFilePath = MarkersDocPathTextBox.Text;
@@ -197,7 +203,7 @@ namespace docx_replace_GUI
                 return;
             }
 
-            string Resultspath = ResultsPathString + @"\all_markers.txt";
+            string Resultspath = "all_markers.txt";
             if (File.Exists(Resultspath))
             {
                 File.Delete(Resultspath);
@@ -230,6 +236,7 @@ namespace docx_replace_GUI
 
                 replacementText = row.Cells[2].Range.Text.TrimEnd('\r', '\a', '\n');
 
+
                 //Замены в теле документа и в колонтитулах
                 foreach (Range rng in inputDoc.StoryRanges)
                 {
@@ -245,6 +252,20 @@ namespace docx_replace_GUI
                          //Format: false,
                          Replace: WdReplace.wdReplaceAll);
                 }
+
+                //inputDoc.Application.Selection.Find.ClearFormatting();
+
+                //inputDoc.Application.Selection.Find.Execute(FindText: markerText,
+                //         ReplaceWith: replacementText,
+                //         MatchCase: false,
+                //         MatchWholeWord: false,
+                //         MatchWildcards: false,
+                //         MatchSoundsLike: false,
+                //         MatchAllWordForms: false,
+                //         //Forward: true,
+                //         //Wrap: WdFindWrap.wdFindContinue,
+                //         //Format: false,
+                //         Replace: WdReplace.wdReplaceAll);
             }
         }
 
@@ -345,20 +366,22 @@ namespace docx_replace_GUI
         }
 
 
-        public static void Copy(string sourceDirectory, string targetDirectory)
-        {
-            DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
-            DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
+        //public static void Copy(string sourceDirectory, string targetDirectory)
+        //{
+        //    DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
+        //    DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
 
-            CopyAll(diSource, diTarget);
-        }
+        //    CopyAll(diSource, diTarget);
+        //}
 
-        public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        public static void CopyAllDocx(DirectoryInfo source, DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
 
             // Copy each file into the new directory.
-            foreach (FileInfo fi in source.GetFiles())
+            foreach (FileInfo fi in source.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
+                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path) == false)
+                                                      .ToArray<string>())
             {
                 fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
             }
@@ -367,7 +390,7 @@ namespace docx_replace_GUI
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
                 DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir);
+                CopyAllDocx(diSourceSubDir, nextTargetSubDir);
             }
         }
     }
