@@ -80,13 +80,10 @@ namespace docx_replace_GUI
                 return;
             }
 
-            if(!Directory.Exists(BackupPathString))
-                Directory.CreateDirectory(BackupPathString);
-
             if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
             {
-                DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, очистить ее перед запуском?", "Предупреждение", MessageBoxButtons.YesNoCancel);
-                if (dr == DialogResult.Yes)
+                DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, файлы с одинаковыми именами в папке для бекапа при копировании будут заменены, продолжить?", "Предупреждение", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.OK)
                 {
                     try
                     {
@@ -110,11 +107,21 @@ namespace docx_replace_GUI
 
             if (MakeBackupCheckBox.Checked)
             {
+                try
+                {
+                    if (!Directory.Exists(BackupPathString))
+                        Directory.CreateDirectory(BackupPathString);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Не удалось создать папку для резервных копий документов");
+                    WorklogTextBox.Text += ex.Message;
+                    return;
+                }
                 DirectoryInfo srcDI = new DirectoryInfo(InputDirPathTextBox.Text);
                 DirectoryInfo destDI = new DirectoryInfo(BackupPathString);
                 CopyAllDocx(srcDI, destDI);
                 WorklogTextBox.Text += "Входные файлы скопированы в  \"" + destDI.FullName + "\"\r\n";
-                inputDir = destDI.FullName;
             }
 
             string markersFilePath = MarkersDocPathTextBox.Text;
@@ -366,22 +373,12 @@ namespace docx_replace_GUI
         }
 
 
-        //public static void Copy(string sourceDirectory, string targetDirectory)
-        //{
-        //    DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
-        //    DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
-
-        //    CopyAll(diSource, diTarget);
-        //}
-
-        public static void CopyAllDocx(DirectoryInfo source, DirectoryInfo target)
+        public void CopyAllDocx(DirectoryInfo source, DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
-
             // Copy each file into the new directory.
-            foreach (FileInfo fi in source.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
-                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path) == false)
-                                                      .ToArray<string>())
+            foreach (FileInfo fi in source.GetFiles("*.docx", SearchOption.AllDirectories)
+                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path.Name) == false))
             {
                 fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
             }
