@@ -80,29 +80,6 @@ namespace docx_replace_GUI
                 return;
             }
 
-            if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
-            {
-                DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, файлы с одинаковыми именами в папке для бекапа при копировании будут заменены, продолжить?", "Предупреждение", MessageBoxButtons.OKCancel);
-                if (dr == DialogResult.OK)
-                {
-                    try
-                    {
-                        Directory.Delete(BackupPathString, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Не удалось очистить папку с резервными копиями");
-                        WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
-                        return;
-                    }
-                    
-                }
-                else if (dr == DialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-
             string inputDir = InputDirPathTextBox.Text;
 
             if (MakeBackupCheckBox.Checked)
@@ -111,6 +88,30 @@ namespace docx_replace_GUI
                 {
                     if (!Directory.Exists(BackupPathString))
                         Directory.CreateDirectory(BackupPathString);
+
+                    if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
+                    {
+                        DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, файлы с одинаковыми именами в папке для бекапа при копировании будут заменены, продолжить?", "Предупреждение", MessageBoxButtons.OKCancel);
+                        if (dr == DialogResult.OK)
+                        {
+                            try
+                            {
+                                Directory.Delete(BackupPathString, true);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Не удалось очистить папку с резервными копиями");
+                                WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
+                                return;
+                            }
+
+                        }
+                        else if (dr == DialogResult.Cancel)
+                        {
+                            return;
+                        }
+                    }
+
                 }
                 catch (Exception ex)
                 {
