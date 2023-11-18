@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Microsoft.Office.Interop.Word;
 
 namespace docx_replace_GUI
@@ -18,20 +19,23 @@ namespace docx_replace_GUI
     {
         //Путь для сохранения резульатов задается жестко, чтобы случайно не удалить ничего лишнего
         string BackupPathString = "backup";
-        Regex markerRegex = new Regex(@"\{\{ \w* \}\}");
-        Regex excludeTmpDocxFilesReg = new Regex(@"\\~\$");//Regex для исключения из списка временных docx-файлов, имена которых начинаются с "~$"
+        Regex markerRegex;
+        string TmpDocxFileMarker = @"\~$";
+        //Regex excludeTmpDocxFilesReg = new Regex(@"\~$");//Regex для исключения из списка временных docx-файлов, имена которых начинаются с "~$"
 
         public Form1()
         {
             InitializeComponent();
+            markerRegex = new Regex(MarkersFormatTextBox.Text);
         }
 
         private void InputDirPathFindButton_Click(object sender, EventArgs e)
         {
-            if (InputDirFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            var dlg = new FolderPicker();
+            if (dlg.ShowDialog(this.Handle) == true && !string.IsNullOrWhiteSpace(dlg.ResultPath))
             {
-                InputDirPathTextBox.Text = InputDirFolderBrowserDialog.SelectedPath;
-                WorklogTextBox.Text += "Выбрана входная папка \"" + InputDirFolderBrowserDialog.SelectedPath + "\"\r\n";
+                InputDirPathTextBox.Text = dlg.ResultPath;
+                WorklogTextBox.Text += "Выбрана входная папка \"" + dlg.ResultPath + "\"\r\n";
             }
         }
 
@@ -137,7 +141,7 @@ namespace docx_replace_GUI
 
             
             string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
-                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path) == false)
+                                                      .Where(path => path.Contains(TmpDocxFileMarker) == false)
                                                       .ToArray<string>();
 
 
@@ -216,7 +220,7 @@ namespace docx_replace_GUI
             {
                 File.Delete(Resultspath);
             }
-            List<string> markers = GetAllMarkersInInputDocs(InputDirPathTextBox.Text, markerRegex, excludeTmpDocxFilesReg);
+            List<string> markers = GetAllMarkersInInputDocs(InputDirPathTextBox.Text, markerRegex);
             if (markers.Count > 0) 
             {
                 File.WriteAllLines(Resultspath, markers.ToArray());
@@ -226,12 +230,230 @@ namespace docx_replace_GUI
                 WorklogTextBox.Text += "В документах не найдено ни одного маркера походящего формата";
         }
 
+        private void StartCheckButton_Click(object sender, EventArgs e)
+        {
+
+            if (InputDirPathTextBox.Text == "")
+            {
+                MessageBox.Show("Выберите папку с документами, которые необходимо проверить");
+                return;
+            }
+            if (!Directory.Exists(InputDirPathTextBox.Text))
+            {
+                MessageBox.Show("Не удалось найти указанную входную папку");
+                return;
+            }
+
+            Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
+            Word.Visible = ShowWordWindowsCheckBox.Checked;
+            Document CurDoc;
+
+            int CommentsCount, MarkersCount;
+            bool CorruptedLinksFound, HighlightsFound;
+
+
+            DirectoryInfo DI = new DirectoryInfo(InputDirPathTextBox.Text);
+            foreach (FileInfo fi in DI.GetFiles("*.docx", SearchOption.AllDirectories)
+                                          .Where(path => path.FullName.Contains(@"\~$") == false))
+            {
+                try
+                {
+                    CurDoc = Word.Documents.Open(fi.FullName);
+
+                    CorruptedLinksFound = false;
+                    HighlightsFound = false;
+
+                    CommentsCount = 0;
+                    MarkersCount = 0;
+
+                    if (CheckCorruptedLinksCheckBox.Checked)
+                        CurDoc.Fields.Update();
+                    foreach (Range rng in CurDoc.StoryRanges)
+                    {
+                        if(CheckCorruptedLinksCheckBox.Checked)
+                        {
+                            CorruptedLinksFound = rng.Find.Execute(FindText: "Ошибка! Источник ссылки не найден",
+                            MatchCase: true,
+                            MatchWholeWord: false,
+                            MatchWildcards: false,
+                            MatchSoundsLike: false,
+                            MatchAllWordForms: false
+                            //Forward: true,
+                            //Wrap: WdFindWrap.wdFindContinue,
+                            //Format: false,
+                            //Replace: WdReplace.wdReplaceAll
+                            );
+
+                            if(CorruptedLinksFound)
+                            {
+                                break;//Если найдена хотя бы одна сломанная ссылка - дальше не ищем
+                            }
+                        }
+
+                        if(CheckHighlightsCheckBox.Checked)
+                        {
+                            rng.Find.ClearFormatting();
+                            rng.Find.Highlight = 1;
+                            HighlightsFound = rng.Find.Execute(FindText: "",
+                            MatchCase: false,
+                            MatchWholeWord: false,
+                            MatchWildcards: false,
+                            MatchSoundsLike: false,
+                            MatchAllWordForms: false,
+                            Format: true
+                            //Forward: true,
+                            //Wrap: WdFindWrap.wdFindContinue,
+                            //Format: false,
+                            //Replace: WdReplace.wdReplaceAll
+                            );
+                            if (HighlightsFound)
+                            {
+                                break;//Если найдено хотя бы одно выделение цветом - дальше не ищем
+                            }
+                        }
+
+
+                        if (CheckMarkersCheckBox.Checked)
+                        {
+                            foreach (Match match in markerRegex.Matches(rng.Text))
+                            {
+                                ++MarkersCount;
+                            }
+                        }
+                    }
+
+                    if (CheckCommentsCheckBox.Checked)
+                    {
+                        if (CurDoc.Comments.Count > 0)
+                        {
+                            CommentsCount = CurDoc.Comments.Count;
+                        }
+                    }
+
+                    if (CorruptedLinksFound || CommentsCount > 0 || HighlightsFound || MarkersCount > 0)
+                    {
+                        WorklogTextBox.Text += $"В файле \"{fi.FullName}\" обнаружены следующие проблемы:\r\n";
+                        
+                        if (CorruptedLinksFound)
+                        {
+                            WorklogTextBox.Text += $"- ошибки в ссылках (1 или больше)\r\n";
+                        }
+
+                        if (CommentsCount > 0)
+                        {
+                            WorklogTextBox.Text += $"- комментарии: {CommentsCount}\r\n";
+                        }
+
+                        if (HighlightsFound)
+                        {
+                            WorklogTextBox.Text += $"- выделения цветом (1 или больше)\r\n";
+                        }
+
+                        if (MarkersCount > 0)
+                        {
+                            WorklogTextBox.Text += $"- маркеры в тексте: {MarkersCount}\r\n";
+                        }
+
+                    }
+                    else
+                    {
+                        WorklogTextBox.Text += $"В файле \"{fi.FullName}\" проблем не обнаружено.\r\n";
+                    }
+
+                    CurDoc.Close(SaveChanges: false);
+                }
+                catch (Exception ex)
+                {
+                    WorklogTextBox.Text += fi.FullName + "\r\n" + ex.Message + "\r\n";
+                    continue;
+                }
+            }
+            Word.Quit();
+        }
+        private void UpdateMarkerFormatRegexButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                markerRegex = new Regex(MarkersFormatTextBox.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void FinalizeButton_Click(object sender, EventArgs e)
+        {
+            if (InputDirPathTextBox.Text == "")
+            {
+                MessageBox.Show("Выберите папку с документами, которые необходимо финализировать");
+                return;
+            }
+            if (!Directory.Exists(InputDirPathTextBox.Text))
+            {
+                MessageBox.Show("Не удалось найти указанную входную папку");
+                return;
+            }
+
+            Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
+            Word.Visible = ShowWordWindowsCheckBox.Checked;
+            Document CurDoc;
+
+            int CommentsCounter = 0;
+
+            DirectoryInfo DI = new DirectoryInfo(InputDirPathTextBox.Text);
+            foreach (FileInfo fi in DI.GetFiles("*.docx", SearchOption.AllDirectories)
+                                          .Where(path => path.FullName.Contains(@"\~$") == false))
+            {
+                try
+                {
+                    CurDoc = Word.Documents.Open(fi.FullName);
+
+                    if(RemoveHighLightsCheckBox.Checked || RemoveCommentsCheckBox.Checked)
+                    {
+                        WorklogTextBox.Text += $"В документе {fi.FullName} проведены следующие операции:\r\n";
+                        if (RemoveHighLightsCheckBox.Checked)
+                        {
+                            foreach (Range rng in CurDoc.StoryRanges)
+                            {
+                                rng.HighlightColorIndex = WdColorIndex.wdNoHighlight;
+                            }
+                            WorklogTextBox.Text += $"- удалены все выделения цветом (если они были в документе)\r\n";
+                        }
+
+                        if (RemoveCommentsCheckBox.Checked)
+                        {
+                            if (CurDoc.Comments.Count > 0)
+                            {
+                                CommentsCounter = CurDoc.Comments.Count;
+                                foreach (Comment comment in CurDoc.Comments)
+                                {
+                                    comment.DeleteRecursively();
+                                }
+                                WorklogTextBox.Text += $"- удалены все комментарии ({CommentsCounter} шт.)\r\n";
+                            }
+                        }
+                        CurDoc.Close(SaveChanges: true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    WorklogTextBox.Text += fi.FullName + "\r\n" + ex.Message + "\r\n";
+                    continue;
+                }
+            }
+            Word.Quit();
+        }
 
 
 
 
 
 
+
+
+
+        //Функции обработки документов
         public void ReplaceMarkers(Document inputDoc, Document markersDoc)
         {
             string replacementText;
@@ -249,16 +471,16 @@ namespace docx_replace_GUI
                 foreach (Range rng in inputDoc.StoryRanges)
                 {
                     rng.Find.Execute(FindText: markerText,
-                         ReplaceWith: replacementText,
-                         MatchCase: false,
-                         MatchWholeWord: false,
-                         MatchWildcards: false,
-                         MatchSoundsLike: false,
-                         MatchAllWordForms: false,
-                         //Forward: true,
-                         //Wrap: WdFindWrap.wdFindContinue,
-                         //Format: false,
-                         Replace: WdReplace.wdReplaceAll);
+                                     ReplaceWith: replacementText,
+                                     MatchCase: false,
+                                     MatchWholeWord: false,
+                                     MatchWildcards: false,
+                                     MatchSoundsLike: false,
+                                     MatchAllWordForms: false,
+                                     //Forward: true,
+                                     //Wrap: WdFindWrap.wdFindContinue,
+                                     //Format: false,
+                                     Replace: WdReplace.wdReplaceAll);
                 }
 
                 //inputDoc.Application.Selection.Find.ClearFormatting();
@@ -332,7 +554,7 @@ namespace docx_replace_GUI
             }
         }
 
-        public List<string> GetAllMarkersInInputDocs(string inputDir, Regex markerRegex, Regex excludeTmpDocxFilesReg)
+        public List<string> GetAllMarkersInInputDocs(string inputDir, Regex markerRegex)
         {
             List<string> markersInDocsList = new List<string>();
             //Match match;
@@ -341,9 +563,8 @@ namespace docx_replace_GUI
 
             word.Visible = ShowWordWindowsCheckBox.Checked;
 
-
             string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
-                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path) == false)
+                                                      .Where(path => path.Contains(TmpDocxFileMarker) == false)
                                                       .ToArray<string>();
 
             foreach (string curFilePath in pathsToInputDocuments)
@@ -353,6 +574,7 @@ namespace docx_replace_GUI
                     Document curDocument = word.Documents.Open(curFilePath);
                     foreach (Range rng in curDocument.StoryRanges)
                     {
+                        string tmp = rng.Text;
                         foreach(Match match in markerRegex.Matches(rng.Text))
                         {
                             if (!markersInDocsList.Contains(match.Value))
@@ -379,7 +601,7 @@ namespace docx_replace_GUI
             Directory.CreateDirectory(target.FullName);
             // Copy each file into the new directory.
             foreach (FileInfo fi in source.GetFiles("*.docx", SearchOption.AllDirectories)
-                                                      .Where(path => excludeTmpDocxFilesReg.IsMatch(path.Name) == false))
+                                                      .Where(path => path.FullName.Contains(TmpDocxFileMarker) == false))
             {
                 fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
             }
