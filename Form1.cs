@@ -21,6 +21,7 @@ namespace docx_replace_GUI
         string BackupPathString = "backup";
         Regex markerRegex;
         string TmpDocxFileMarker = @"\~$";
+        int TooManyInputFilesThreshold = 30;
         //Regex excludeTmpDocxFilesReg = new Regex(@"\~$");//Regex для исключения из списка временных docx-файлов, имена которых начинаются с "~$"
 
         public Form1()
@@ -129,6 +130,20 @@ namespace docx_replace_GUI
                 WorklogTextBox.Text += "Входные файлы скопированы в  \"" + destDI.FullName + "\"\r\n";
             }
 
+            string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
+                                                      .Where(path => path.Contains(TmpDocxFileMarker) == false)
+                                                      .ToArray<string>();
+
+            if (pathsToInputDocuments.Count() > TooManyInputFilesThreshold)
+            {
+                if (MessageBox.Show($"Во входной папке обнаружено {pathsToInputDocuments.Count()} документов. " +
+                    $"Возможно, выбрана неверная входная папка. " +
+                    $"Продолжить?", "Внимание", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                {
+                    WorklogTextBox.Text += "Запуск процесса отменен\r\n";
+                    return;
+                }
+            }
             string markersFilePath = MarkersDocPathTextBox.Text;
             string textBlocksFilePath = TextBlocksDocPathTextBox.Text;
 
@@ -140,10 +155,7 @@ namespace docx_replace_GUI
             Document textBlocksDocument = word.Documents.Open(textBlocksFilePath);
 
             
-            string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
-                                                      .Where(path => path.Contains(TmpDocxFileMarker) == false)
-                                                      .ToArray<string>();
-
+            
 
             //Планы на будущее
             //List<KeyValuePair<string,string>> markers = new List<KeyValuePair<string,string>>();
@@ -244,6 +256,23 @@ namespace docx_replace_GUI
                 return;
             }
 
+            string InputDir = InputDirPathTextBox.Text;
+
+            string[] PathsToInputDocuments = Directory.GetFiles(InputDir, "*.docx", SearchOption.AllDirectories)
+                                          .Where(path => path.Contains(TmpDocxFileMarker) == false)
+                                          .ToArray<string>();
+
+            if (PathsToInputDocuments.Count() > TooManyInputFilesThreshold)
+            {
+                if (MessageBox.Show($"Во входной папке обнаружено {PathsToInputDocuments.Count()} документов. " +
+                    $"Возможно, выбрана неверная входная папка. " +
+                    $"Продолжить?", "Внимание", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                {
+                    WorklogTextBox.Text += "Запуск процесса отменен\r\n";
+                    return;
+                }
+            }
+
             Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
             Word.Visible = ShowWordWindowsCheckBox.Checked;
             Document CurDoc;
@@ -254,7 +283,7 @@ namespace docx_replace_GUI
 
             DirectoryInfo DI = new DirectoryInfo(InputDirPathTextBox.Text);
             foreach (FileInfo fi in DI.GetFiles("*.docx", SearchOption.AllDirectories)
-                                          .Where(path => path.FullName.Contains(@"\~$") == false))
+                                          .Where(path => path.FullName.Contains(TmpDocxFileMarker) == false))
             {
                 try
                 {
@@ -395,23 +424,39 @@ namespace docx_replace_GUI
                 return;
             }
 
+            string InputDir = InputDirPathTextBox.Text;
+
+            int CommentsCounter = 0;
+
+            string[] PathsToInputDocuments = Directory.GetFiles(InputDir, "*.docx", SearchOption.AllDirectories)
+                                          .Where(path => path.Contains(TmpDocxFileMarker) == false)
+                                          .ToArray<string>();
+
+            if (PathsToInputDocuments.Count() > TooManyInputFilesThreshold)
+            {
+                if (MessageBox.Show($"Во входной папке обнаружено {PathsToInputDocuments.Count()} документов. " +
+                    $"Возможно, выбрана неверная входная папка. " +
+                    $"Продолжить?", "Внимание", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                {
+                    WorklogTextBox.Text += "Запуск процесса отменен\r\n";
+                    return;
+                }
+            }
+
+
             Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
             Word.Visible = ShowWordWindowsCheckBox.Checked;
             Document CurDoc;
 
-            int CommentsCounter = 0;
-
-            DirectoryInfo DI = new DirectoryInfo(InputDirPathTextBox.Text);
-            foreach (FileInfo fi in DI.GetFiles("*.docx", SearchOption.AllDirectories)
-                                          .Where(path => path.FullName.Contains(@"\~$") == false))
+            foreach (string CurFilePath in PathsToInputDocuments)
             {
                 try
                 {
-                    CurDoc = Word.Documents.Open(fi.FullName);
+                    CurDoc = Word.Documents.Open(CurFilePath);
 
                     if(RemoveHighLightsCheckBox.Checked || RemoveCommentsCheckBox.Checked)
                     {
-                        WorklogTextBox.Text += $"В документе {fi.FullName} проведены следующие операции:\r\n";
+                        WorklogTextBox.Text += $"В документе {CurFilePath} проведены следующие операции:\r\n";
                         if (RemoveHighLightsCheckBox.Checked)
                         {
                             foreach (Range rng in CurDoc.StoryRanges)
@@ -438,12 +483,17 @@ namespace docx_replace_GUI
                 }
                 catch (Exception ex)
                 {
-                    WorklogTextBox.Text += fi.FullName + "\r\n" + ex.Message + "\r\n";
+                    WorklogTextBox.Text += CurFilePath + "\r\n" + ex.Message + "\r\n";
                     continue;
                 }
             }
             Word.Quit();
         }
+
+
+
+
+
 
 
 
