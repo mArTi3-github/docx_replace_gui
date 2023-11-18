@@ -282,12 +282,11 @@ namespace docx_replace_GUI
 
 
             DirectoryInfo DI = new DirectoryInfo(InputDirPathTextBox.Text);
-            foreach (FileInfo fi in DI.GetFiles("*.docx", SearchOption.AllDirectories)
-                                          .Where(path => path.FullName.Contains(TmpDocxFileMarker) == false))
+            foreach (string CurFilePath in PathsToInputDocuments)
             {
                 try
                 {
-                    CurDoc = Word.Documents.Open(fi.FullName);
+                    CurDoc = Word.Documents.Open(CurFilePath);
 
                     CorruptedLinksFound = false;
                     HighlightsFound = false;
@@ -361,7 +360,7 @@ namespace docx_replace_GUI
 
                     if (CorruptedLinksFound || CommentsCount > 0 || HighlightsFound || MarkersCount > 0)
                     {
-                        WorklogTextBox.Text += $"В файле \"{fi.FullName}\" обнаружены следующие проблемы:\r\n";
+                        WorklogTextBox.Text += $"В файле \"{CurFilePath}\" обнаружены следующие проблемы:\r\n";
                         
                         if (CorruptedLinksFound)
                         {
@@ -386,14 +385,14 @@ namespace docx_replace_GUI
                     }
                     else
                     {
-                        WorklogTextBox.Text += $"В файле \"{fi.FullName}\" проблем не обнаружено.\r\n";
+                        WorklogTextBox.Text += $"В файле \"{CurFilePath}\" проблем не обнаружено.\r\n";
                     }
 
                     CurDoc.Close(SaveChanges: false);
                 }
                 catch (Exception ex)
                 {
-                    WorklogTextBox.Text += fi.FullName + "\r\n" + ex.Message + "\r\n";
+                    WorklogTextBox.Text += CurFilePath + "\r\n" + ex.Message + "\r\n";
                     continue;
                 }
             }
