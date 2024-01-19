@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Microsoft.Office.Interop.Word;
+using System.Diagnostics;
 
 namespace docx_replace_GUI
 {
@@ -61,6 +62,16 @@ namespace docx_replace_GUI
         [STAThread]//Без этого не получается считывать данные из буфера обмена
         private void StartButton_Click(object sender, EventArgs e)
         {
+            if(WordProcessIsRunning())
+            {
+                DialogResult dr = MessageBox.Show("Программа MS Word запущена, рекомендуется закрыть все документы перед запуском, т.к. программа не сможет выполнить замены" +
+                    " в открытых документах. Нажмите \"Отмена\", чтобы отменить запуск программы и закрыть окна Word вручную, или нажмите \"ОК\", чтобы продолжить, " +
+                    "несмотря на открытые документы",
+                    "Предупреждение", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel)
+                    return;
+                MessageBox.Show(DialogResult.Cancel.ToString());
+            }
 
             //Блок проверки корректности входных данных
             if (InputDirPathTextBox.Text == "")
@@ -154,15 +165,6 @@ namespace docx_replace_GUI
             Document markersDocument = word.Documents.Open(markersFilePath);
             Document textBlocksDocument = word.Documents.Open(textBlocksFilePath);
 
-            
-            
-
-            //Планы на будущее
-            //List<KeyValuePair<string,string>> markers = new List<KeyValuePair<string,string>>();
-
-
-            
-
             foreach (string curFilePath in pathsToInputDocuments)
             {
                 try
@@ -244,6 +246,16 @@ namespace docx_replace_GUI
 
         private void StartCheckButton_Click(object sender, EventArgs e)
         {
+            if (WordProcessIsRunning())
+            {
+                DialogResult dr = MessageBox.Show("Программа MS Word запущена, рекомендуется закрыть все документы перед запуском, т.к. программа не сможет выполнить замены" +
+                    " в открытых документах. Нажмите \"Отмена\", чтобы отменить запуск программы и закрыть окна Word вручную, или нажмите \"ОК\", чтобы продолжить, " +
+                    "несмотря на открытые документы",
+                    "Предупреждение", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel)
+                    return;
+                MessageBox.Show(DialogResult.Cancel.ToString());
+            }
 
             if (InputDirPathTextBox.Text == "")
             {
@@ -412,6 +424,17 @@ namespace docx_replace_GUI
 
         private void FinalizeButton_Click(object sender, EventArgs e)
         {
+            if (WordProcessIsRunning())
+            {
+                DialogResult dr = MessageBox.Show("Программа MS Word запущена, рекомендуется закрыть все документы перед запуском, т.к. программа не сможет выполнить замены" +
+                    " в открытых документах. Нажмите \"Отмена\", чтобы отменить запуск программы и закрыть окна Word вручную, или нажмите \"ОК\", чтобы продолжить, " +
+                    "несмотря на открытые документы",
+                    "Предупреждение", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel)
+                    return;
+                MessageBox.Show(DialogResult.Cancel.ToString());
+            }
+
             if (InputDirPathTextBox.Text == "")
             {
                 MessageBox.Show("Выберите папку с документами, которые необходимо финализировать");
@@ -644,7 +667,6 @@ namespace docx_replace_GUI
             return markersInDocsList;
         }
 
-
         public void CopyAllDocx(DirectoryInfo source, DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
@@ -661,6 +683,16 @@ namespace docx_replace_GUI
                 DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAllDocx(diSourceSubDir, nextTargetSubDir);
             }
+        }
+
+
+        //Прочие функции
+        public bool WordProcessIsRunning()
+        {
+            if (Process.GetProcessesByName("WINWORD").Count() > 0)
+                return true;
+            else
+                return false;
         }
     }
 }
