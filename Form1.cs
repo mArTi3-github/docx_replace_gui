@@ -60,7 +60,7 @@ namespace docx_replace_GUI
         }
 
         [STAThread]//Без этого не получается считывать данные из буфера обмена
-        private void StartButton_Click(object sender, EventArgs e)
+        private void ReplaceButton_Click(object sender, EventArgs e)
         {
             if(WordProcessIsRunning())
             {
@@ -159,7 +159,7 @@ namespace docx_replace_GUI
             string textBlocksFilePath = TextBlocksDocPathTextBox.Text;
 
             Microsoft.Office.Interop.Word.Application word = new Microsoft.Office.Interop.Word.Application();
-            
+
             word.Visible = ShowWordWindowsCheckBox.Checked;
 
             Document markersDocument = word.Documents.Open(markersFilePath);
@@ -177,7 +177,7 @@ namespace docx_replace_GUI
                         curDocument.TrackRevisions = true;
                     }
 
-                    WorklogTextBox.Text +=  "Обрабатываемый файл:" + curFilePath + "\"\r\n";
+                    WorklogTextBox.Text += "Обрабатываемый файл:" + curFilePath + "\"\r\n";
 
                     //Обработка замен по таблице
                     if (MarkersDocPathTextBox.Text != "")
@@ -196,8 +196,6 @@ namespace docx_replace_GUI
                         ReplaceTextBlocks(curDocument, textBlocksDocument, word, markerRegex);
                     }
 
-
-
                     curDocument.Save();
                     curDocument.Close();
                 }
@@ -213,7 +211,7 @@ namespace docx_replace_GUI
                     continue;
                 }
             }
-            if(markersDocument != null)
+            if (markersDocument != null)
                 markersDocument.Close();
             if (textBlocksDocument != null)
                 textBlocksDocument.Close();
@@ -223,7 +221,7 @@ namespace docx_replace_GUI
 
         private void GetAllMarkersButton_Click(object sender, EventArgs e)
         {
-            if(InputDirPathTextBox.Text == "")
+            if (InputDirPathTextBox.Text == "")
             {
                 MessageBox.Show("Выберите папку с документами, в которых необходимо найти маркеры");
                 return;
@@ -235,7 +233,7 @@ namespace docx_replace_GUI
                 File.Delete(Resultspath);
             }
             List<string> markers = GetAllMarkersInInputDocs(InputDirPathTextBox.Text, markerRegex);
-            if (markers.Count > 0) 
+            if (markers.Count > 0)
             {
                 File.WriteAllLines(Resultspath, markers.ToArray());
                 WorklogTextBox.Text += "Список маркеров сохранен в \"" + Resultspath + "\r\n";
@@ -244,7 +242,7 @@ namespace docx_replace_GUI
                 WorklogTextBox.Text += "В документах не найдено ни одного маркера походящего формата";
         }
 
-        private void StartCheckButton_Click(object sender, EventArgs e)
+        private void CheckButton_Click(object sender, EventArgs e)
         {
             if (WordProcessIsRunning())
             {
@@ -285,11 +283,13 @@ namespace docx_replace_GUI
                 }
             }
 
+            WorklogTextBox.Text += $"Проверка начата" + "\r\n";
+
             Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
             Word.Visible = ShowWordWindowsCheckBox.Checked;
             Document CurDoc;
 
-            int CommentsCount, MarkersCount;
+            int CommentsCount, MarkersCount, RevisionsCount;
             bool CorruptedLinksFound, HighlightsFound;
 
 
@@ -305,12 +305,13 @@ namespace docx_replace_GUI
 
                     CommentsCount = 0;
                     MarkersCount = 0;
+                    RevisionsCount = 0;
 
                     if (CheckCorruptedLinksCheckBox.Checked)
                         CurDoc.Fields.Update();
                     foreach (Range rng in CurDoc.StoryRanges)
                     {
-                        if(CheckCorruptedLinksCheckBox.Checked)
+                        if (CheckCorruptedLinksCheckBox.Checked && !CorruptedLinksFound)
                         {
                             CorruptedLinksFound = rng.Find.Execute(FindText: "Ошибка! Источник ссылки не найден",
                             MatchCase: true,
@@ -323,14 +324,8 @@ namespace docx_replace_GUI
                             //Format: false,
                             //Replace: WdReplace.wdReplaceAll
                             );
-
-                            if(CorruptedLinksFound)
-                            {
-                                break;//Если найдена хотя бы одна сломанная ссылка - дальше не ищем
-                            }
                         }
-
-                        if(CheckHighlightsCheckBox.Checked)
+                        if (CheckHighlightsCheckBox.Checked && !HighlightsFound)
                         {
                             rng.Find.ClearFormatting();
                             rng.Find.Highlight = 1;
@@ -341,18 +336,20 @@ namespace docx_replace_GUI
                             MatchSoundsLike: false,
                             MatchAllWordForms: false,
                             Format: true
+                            //Replace: WdReplace.wdReplaceAll,
+                            //ReplaceWith: "ZAZAZAZAZAZAZAZ121212"
                             //Forward: true,
                             //Wrap: WdFindWrap.wdFindContinue,
                             //Format: false,
                             //Replace: WdReplace.wdReplaceAll
                             );
-                            if (HighlightsFound)
-                            {
-                                break;//Если найдено хотя бы одно выделение цветом - дальше не ищем
-                            }
+
+                            //Debug
+                            //if(HighlightsFound)
+                            //{
+                            //    MessageBox.Show(rng.Text);
+                            //}
                         }
-
-
                         if (CheckMarkersCheckBox.Checked)
                         {
                             foreach (Match match in markerRegex.Matches(rng.Text))
@@ -364,16 +361,20 @@ namespace docx_replace_GUI
 
                     if (CheckCommentsCheckBox.Checked)
                     {
-                        if (CurDoc.Comments.Count > 0)
-                        {
-                            CommentsCount = CurDoc.Comments.Count;
-                        }
+                        CommentsCount = CurDoc.Comments.Count;
                     }
 
-                    if (CorruptedLinksFound || CommentsCount > 0 || HighlightsFound || MarkersCount > 0)
+                    if (CheckRevisionsCheckBox.Checked)
+                    {
+                        RevisionsCount = CurDoc.Revisions.Count;
+                    }
+
+
+
+                    if (CorruptedLinksFound || CommentsCount > 0 || HighlightsFound || MarkersCount > 0 || RevisionsCount > 0)
                     {
                         WorklogTextBox.Text += $"В файле \"{CurFilePath}\" обнаружены следующие проблемы:\r\n";
-                        
+
                         if (CorruptedLinksFound)
                         {
                             WorklogTextBox.Text += $"- ошибки в ссылках (1 или больше)\r\n";
@@ -394,6 +395,11 @@ namespace docx_replace_GUI
                             WorklogTextBox.Text += $"- маркеры в тексте: {MarkersCount}\r\n";
                         }
 
+                        if (RevisionsCount > 0)
+                        {
+                            WorklogTextBox.Text += $"- исправления в тексте: {RevisionsCount}\r\n";
+                        }
+
                     }
                     else
                     {
@@ -409,6 +415,7 @@ namespace docx_replace_GUI
                 }
             }
             Word.Quit();
+            WorklogTextBox.Text += $"Проверка завершена" + "\r\n";
         }
         private void UpdateMarkerFormatRegexButton_Click(object sender, EventArgs e)
         {
@@ -424,15 +431,10 @@ namespace docx_replace_GUI
 
         private void FinalizeButton_Click(object sender, EventArgs e)
         {
-            if (WordProcessIsRunning())
+            if (!RemoveHighLightsCheckBox.Checked && !RemoveCommentsCheckBox.Checked && !AcceptRevisionsCheckBox.Checked)
             {
-                DialogResult dr = MessageBox.Show("Программа MS Word запущена, рекомендуется закрыть все документы перед запуском, т.к. программа не сможет выполнить замены" +
-                    " в открытых документах. Нажмите \"Отмена\", чтобы отменить запуск программы и закрыть окна Word вручную, или нажмите \"ОК\", чтобы продолжить, " +
-                    "несмотря на открытые документы",
-                    "Предупреждение", MessageBoxButtons.OKCancel);
-                if (dr == DialogResult.Cancel)
-                    return;
-                MessageBox.Show(DialogResult.Cancel.ToString());
+                MessageBox.Show("Выберите хотя бы одну процедуру для финализации");
+                return;
             }
 
             if (InputDirPathTextBox.Text == "")
@@ -449,6 +451,7 @@ namespace docx_replace_GUI
             string InputDir = InputDirPathTextBox.Text;
 
             int CommentsCounter = 0;
+            int RevisionsCounter = 0;
 
             string[] PathsToInputDocuments = Directory.GetFiles(InputDir, "*.docx", SearchOption.AllDirectories)
                                           .Where(path => path.Contains(TmpDocxFileMarker) == false)
@@ -465,6 +468,7 @@ namespace docx_replace_GUI
                 }
             }
 
+            WorklogTextBox.Text += $"Финализация начата" + "\r\n";
 
             Microsoft.Office.Interop.Word.Application Word = new Microsoft.Office.Interop.Word.Application();
             Word.Visible = ShowWordWindowsCheckBox.Checked;
@@ -476,32 +480,46 @@ namespace docx_replace_GUI
                 {
                     CurDoc = Word.Documents.Open(CurFilePath);
 
-                    if(RemoveHighLightsCheckBox.Checked || RemoveCommentsCheckBox.Checked)
+                    WorklogTextBox.Text += $"В документе {CurFilePath} проведены следующие операции:\r\n";
+                    if (RemoveHighLightsCheckBox.Checked)
                     {
-                        WorklogTextBox.Text += $"В документе {CurFilePath} проведены следующие операции:\r\n";
-                        if (RemoveHighLightsCheckBox.Checked)
+                        foreach (Range rng in CurDoc.StoryRanges)
                         {
-                            foreach (Range rng in CurDoc.StoryRanges)
-                            {
-                                rng.HighlightColorIndex = WdColorIndex.wdNoHighlight;
-                            }
-                            WorklogTextBox.Text += $"- удалены все выделения цветом (если они были в документе)\r\n";
+                            rng.HighlightColorIndex = WdColorIndex.wdNoHighlight;
                         }
-
-                        if (RemoveCommentsCheckBox.Checked)
-                        {
-                            if (CurDoc.Comments.Count > 0)
-                            {
-                                CommentsCounter = CurDoc.Comments.Count;
-                                foreach (Comment comment in CurDoc.Comments)
-                                {
-                                    comment.DeleteRecursively();
-                                }
-                                WorklogTextBox.Text += $"- удалены все комментарии ({CommentsCounter} шт.)\r\n";
-                            }
-                        }
-                        CurDoc.Close(SaveChanges: true);
+                        WorklogTextBox.Text += $"- удалены все выделения цветом (если они были в документе)\r\n";
                     }
+
+                    if (RemoveCommentsCheckBox.Checked)
+                    {
+                        if (CurDoc.Comments.Count > 0)
+                        {
+                            CommentsCounter = CurDoc.Comments.Count;
+                            foreach (Comment comment in CurDoc.Comments)
+                            {
+                                comment.DeleteRecursively();
+                            }
+                            WorklogTextBox.Text += $"- удалены все комментарии ({CommentsCounter} шт.)\r\n";
+                        }
+                        else
+                        {
+                            WorklogTextBox.Text += $"- комментарии не обнаружены\r\n";
+                        }
+                    }
+
+                    if (AcceptRevisionsCheckBox.Checked)
+                    {
+                        RevisionsCounter = CurDoc.Revisions.Count;
+                        
+                        if (RevisionsCounter > 0)
+                        {
+                            CurDoc.AcceptAllRevisions();
+                            WorklogTextBox.Text += $"- приняты все исправления ({RevisionsCounter} шт.)\r\n";
+                        }
+                        CurDoc.TrackRevisions = false;
+                    }
+
+                    CurDoc.Close(SaveChanges: true);
                 }
                 catch (Exception ex)
                 {
@@ -510,6 +528,7 @@ namespace docx_replace_GUI
                 }
             }
             Word.Quit();
+            WorklogTextBox.Text += $"Финализация завершена" + "\r\n";
         }
 
 
@@ -647,7 +666,7 @@ namespace docx_replace_GUI
                     foreach (Range rng in curDocument.StoryRanges)
                     {
                         string tmp = rng.Text;
-                        foreach(Match match in markerRegex.Matches(rng.Text))
+                        foreach (Match match in markerRegex.Matches(rng.Text))
                         {
                             if (!markersInDocsList.Contains(match.Value))
                             {
