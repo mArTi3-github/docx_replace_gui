@@ -431,6 +431,17 @@ namespace docx_replace_GUI
 
         private void FinalizeButton_Click(object sender, EventArgs e)
         {
+            if (WordProcessIsRunning())
+            {
+                DialogResult dr = MessageBox.Show("Программа MS Word запущена, рекомендуется закрыть все документы перед запуском, т.к. программа не сможет выполнить замены" +
+                    " в открытых документах. Нажмите \"Отмена\", чтобы отменить запуск программы и закрыть окна Word вручную, или нажмите \"ОК\", чтобы продолжить, " +
+                    "несмотря на открытые документы",
+                    "Предупреждение", MessageBoxButtons.OKCancel);
+                if (dr == DialogResult.Cancel)
+                    return;
+                MessageBox.Show(DialogResult.Cancel.ToString());
+            }
+
             if (!RemoveHighLightsCheckBox.Checked && !RemoveCommentsCheckBox.Checked && !AcceptRevisionsCheckBox.Checked)
             {
                 MessageBox.Show("Выберите хотя бы одну процедуру для финализации");
