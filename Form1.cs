@@ -530,6 +530,12 @@ namespace docx_replace_GUI
                         CurDoc.TrackRevisions = false;
                     }
 
+                    if (UpdateFieldsCheckBox.Checked)
+                    {
+                        CurDoc.Fields.Update();
+                        WorklogTextBox.Text += $"- обновлены все поля\r\n";
+                    }
+
                     CurDoc.Close(SaveChanges: true);
                 }
                 catch (Exception ex)

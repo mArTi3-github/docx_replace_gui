@@ -55,13 +55,14 @@
             this.CheckCorruptedLinksCheckBox = new System.Windows.Forms.CheckBox();
             this.CheckButton = new System.Windows.Forms.Button();
             this.tabPageFinalization = new System.Windows.Forms.TabPage();
+            this.AcceptRevisionsCheckBox = new System.Windows.Forms.CheckBox();
             this.FinalizeButton = new System.Windows.Forms.Button();
             this.RemoveCommentsCheckBox = new System.Windows.Forms.CheckBox();
             this.RemoveHighLightsCheckBox = new System.Windows.Forms.CheckBox();
             this.MarkersFormatLabel = new System.Windows.Forms.Label();
             this.MarkersFormatTextBox = new System.Windows.Forms.TextBox();
             this.UpdateMarkerFormatRegexButton = new System.Windows.Forms.Button();
-            this.AcceptRevisionsCheckBox = new System.Windows.Forms.CheckBox();
+            this.UpdateFieldsCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPageReplace.SuspendLayout();
             this.tabPageCheck.SuspendLayout();
@@ -91,7 +92,7 @@
             // InputDirPathTextBox
             // 
             this.InputDirPathTextBox.Location = new System.Drawing.Point(285, 7);
-            this.InputDirPathTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.InputDirPathTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.InputDirPathTextBox.Name = "InputDirPathTextBox";
             this.InputDirPathTextBox.Size = new System.Drawing.Size(605, 22);
             this.InputDirPathTextBox.TabIndex = 2;
@@ -99,7 +100,7 @@
             // MarkersDocPathTextBox
             // 
             this.MarkersDocPathTextBox.Location = new System.Drawing.Point(299, 20);
-            this.MarkersDocPathTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MarkersDocPathTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.MarkersDocPathTextBox.Name = "MarkersDocPathTextBox";
             this.MarkersDocPathTextBox.Size = new System.Drawing.Size(605, 22);
             this.MarkersDocPathTextBox.TabIndex = 3;
@@ -107,7 +108,7 @@
             // InputDirPathFindButton
             // 
             this.InputDirPathFindButton.Location = new System.Drawing.Point(900, 5);
-            this.InputDirPathFindButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.InputDirPathFindButton.Margin = new System.Windows.Forms.Padding(4);
             this.InputDirPathFindButton.Name = "InputDirPathFindButton";
             this.InputDirPathFindButton.Size = new System.Drawing.Size(100, 28);
             this.InputDirPathFindButton.TabIndex = 4;
@@ -118,7 +119,7 @@
             // MarkersDocFindButton
             // 
             this.MarkersDocFindButton.Location = new System.Drawing.Point(913, 17);
-            this.MarkersDocFindButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MarkersDocFindButton.Margin = new System.Windows.Forms.Padding(4);
             this.MarkersDocFindButton.Name = "MarkersDocFindButton";
             this.MarkersDocFindButton.Size = new System.Drawing.Size(100, 28);
             this.MarkersDocFindButton.TabIndex = 5;
@@ -129,7 +130,7 @@
             // WorklogTextBox
             // 
             this.WorklogTextBox.Location = new System.Drawing.Point(16, 416);
-            this.WorklogTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.WorklogTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.WorklogTextBox.Multiline = true;
             this.WorklogTextBox.Name = "WorklogTextBox";
             this.WorklogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -139,7 +140,7 @@
             // ReplaceButton
             // 
             this.ReplaceButton.Location = new System.Drawing.Point(463, 197);
-            this.ReplaceButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReplaceButton.Margin = new System.Windows.Forms.Padding(4);
             this.ReplaceButton.Name = "ReplaceButton";
             this.ReplaceButton.Size = new System.Drawing.Size(100, 28);
             this.ReplaceButton.TabIndex = 7;
@@ -167,7 +168,7 @@
             this.MakeBackupCheckBox.Checked = true;
             this.MakeBackupCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MakeBackupCheckBox.Location = new System.Drawing.Point(33, 112);
-            this.MakeBackupCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MakeBackupCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.MakeBackupCheckBox.Name = "MakeBackupCheckBox";
             this.MakeBackupCheckBox.Size = new System.Drawing.Size(174, 20);
             this.MakeBackupCheckBox.TabIndex = 9;
@@ -187,7 +188,7 @@
             // TextBlocksDocPathTextBox
             // 
             this.TextBlocksDocPathTextBox.Location = new System.Drawing.Point(299, 71);
-            this.TextBlocksDocPathTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TextBlocksDocPathTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.TextBlocksDocPathTextBox.Name = "TextBlocksDocPathTextBox";
             this.TextBlocksDocPathTextBox.Size = new System.Drawing.Size(605, 22);
             this.TextBlocksDocPathTextBox.TabIndex = 11;
@@ -195,7 +196,7 @@
             // TextBlocksDocFindButton
             // 
             this.TextBlocksDocFindButton.Location = new System.Drawing.Point(913, 71);
-            this.TextBlocksDocFindButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TextBlocksDocFindButton.Margin = new System.Windows.Forms.Padding(4);
             this.TextBlocksDocFindButton.Name = "TextBlocksDocFindButton";
             this.TextBlocksDocFindButton.Size = new System.Drawing.Size(100, 28);
             this.TextBlocksDocFindButton.TabIndex = 12;
@@ -206,7 +207,7 @@
             // GetAllMarkersButton
             // 
             this.GetAllMarkersButton.Location = new System.Drawing.Point(767, 197);
-            this.GetAllMarkersButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.GetAllMarkersButton.Margin = new System.Windows.Forms.Padding(4);
             this.GetAllMarkersButton.Name = "GetAllMarkersButton";
             this.GetAllMarkersButton.Size = new System.Drawing.Size(265, 28);
             this.GetAllMarkersButton.TabIndex = 13;
@@ -218,7 +219,7 @@
             // 
             this.ReplaceInTrackRevisionsModeChechBox.AutoSize = true;
             this.ReplaceInTrackRevisionsModeChechBox.Location = new System.Drawing.Point(33, 140);
-            this.ReplaceInTrackRevisionsModeChechBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReplaceInTrackRevisionsModeChechBox.Margin = new System.Windows.Forms.Padding(4);
             this.ReplaceInTrackRevisionsModeChechBox.Name = "ReplaceInTrackRevisionsModeChechBox";
             this.ReplaceInTrackRevisionsModeChechBox.Size = new System.Drawing.Size(464, 20);
             this.ReplaceInTrackRevisionsModeChechBox.TabIndex = 14;
@@ -231,7 +232,7 @@
             this.ShowWordWindowsCheckBox.Checked = true;
             this.ShowWordWindowsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowWordWindowsCheckBox.Location = new System.Drawing.Point(20, 96);
-            this.ShowWordWindowsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ShowWordWindowsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.ShowWordWindowsCheckBox.Name = "ShowWordWindowsCheckBox";
             this.ShowWordWindowsCheckBox.Size = new System.Drawing.Size(179, 20);
             this.ShowWordWindowsCheckBox.TabIndex = 15;
@@ -244,7 +245,7 @@
             this.tabControl1.Controls.Add(this.tabPageCheck);
             this.tabControl1.Controls.Add(this.tabPageFinalization);
             this.tabControl1.Location = new System.Drawing.Point(16, 124);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1051, 268);
@@ -263,9 +264,9 @@
             this.tabPageReplace.Controls.Add(this.TextBlocksDocPathTextBox);
             this.tabPageReplace.Controls.Add(this.TextBlocksPathLabel);
             this.tabPageReplace.Location = new System.Drawing.Point(4, 25);
-            this.tabPageReplace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageReplace.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageReplace.Name = "tabPageReplace";
-            this.tabPageReplace.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageReplace.Padding = new System.Windows.Forms.Padding(4);
             this.tabPageReplace.Size = new System.Drawing.Size(1043, 239);
             this.tabPageReplace.TabIndex = 0;
             this.tabPageReplace.Text = "Замена";
@@ -280,9 +281,9 @@
             this.tabPageCheck.Controls.Add(this.CheckCorruptedLinksCheckBox);
             this.tabPageCheck.Controls.Add(this.CheckButton);
             this.tabPageCheck.Location = new System.Drawing.Point(4, 25);
-            this.tabPageCheck.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageCheck.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageCheck.Name = "tabPageCheck";
-            this.tabPageCheck.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageCheck.Padding = new System.Windows.Forms.Padding(4);
             this.tabPageCheck.Size = new System.Drawing.Size(1043, 239);
             this.tabPageCheck.TabIndex = 1;
             this.tabPageCheck.Text = "Проверка";
@@ -294,7 +295,7 @@
             this.CheckRevisionsCheckBox.Checked = true;
             this.CheckRevisionsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckRevisionsCheckBox.Location = new System.Drawing.Point(8, 120);
-            this.CheckRevisionsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckRevisionsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.CheckRevisionsCheckBox.Name = "CheckRevisionsCheckBox";
             this.CheckRevisionsCheckBox.Size = new System.Drawing.Size(117, 20);
             this.CheckRevisionsCheckBox.TabIndex = 5;
@@ -307,7 +308,7 @@
             this.CheckMarkersCheckBox.Checked = true;
             this.CheckMarkersCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckMarkersCheckBox.Location = new System.Drawing.Point(8, 92);
-            this.CheckMarkersCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckMarkersCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.CheckMarkersCheckBox.Name = "CheckMarkersCheckBox";
             this.CheckMarkersCheckBox.Size = new System.Drawing.Size(88, 20);
             this.CheckMarkersCheckBox.TabIndex = 4;
@@ -320,7 +321,7 @@
             this.CheckHighlightsCheckBox.Checked = true;
             this.CheckHighlightsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckHighlightsCheckBox.Location = new System.Drawing.Point(8, 64);
-            this.CheckHighlightsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckHighlightsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.CheckHighlightsCheckBox.Name = "CheckHighlightsCheckBox";
             this.CheckHighlightsCheckBox.Size = new System.Drawing.Size(153, 20);
             this.CheckHighlightsCheckBox.TabIndex = 3;
@@ -333,7 +334,7 @@
             this.CheckCommentsCheckBox.Checked = true;
             this.CheckCommentsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckCommentsCheckBox.Location = new System.Drawing.Point(8, 36);
-            this.CheckCommentsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckCommentsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.CheckCommentsCheckBox.Name = "CheckCommentsCheckBox";
             this.CheckCommentsCheckBox.Size = new System.Drawing.Size(118, 20);
             this.CheckCommentsCheckBox.TabIndex = 2;
@@ -346,7 +347,7 @@
             this.CheckCorruptedLinksCheckBox.Checked = true;
             this.CheckCorruptedLinksCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckCorruptedLinksCheckBox.Location = new System.Drawing.Point(8, 7);
-            this.CheckCorruptedLinksCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckCorruptedLinksCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.CheckCorruptedLinksCheckBox.Name = "CheckCorruptedLinksCheckBox";
             this.CheckCorruptedLinksCheckBox.Size = new System.Drawing.Size(145, 20);
             this.CheckCorruptedLinksCheckBox.TabIndex = 1;
@@ -356,7 +357,7 @@
             // CheckButton
             // 
             this.CheckButton.Location = new System.Drawing.Point(469, 201);
-            this.CheckButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CheckButton.Margin = new System.Windows.Forms.Padding(4);
             this.CheckButton.Name = "CheckButton";
             this.CheckButton.Size = new System.Drawing.Size(100, 28);
             this.CheckButton.TabIndex = 0;
@@ -366,23 +367,35 @@
             // 
             // tabPageFinalization
             // 
+            this.tabPageFinalization.Controls.Add(this.UpdateFieldsCheckBox);
             this.tabPageFinalization.Controls.Add(this.AcceptRevisionsCheckBox);
             this.tabPageFinalization.Controls.Add(this.FinalizeButton);
             this.tabPageFinalization.Controls.Add(this.RemoveCommentsCheckBox);
             this.tabPageFinalization.Controls.Add(this.RemoveHighLightsCheckBox);
             this.tabPageFinalization.Location = new System.Drawing.Point(4, 25);
-            this.tabPageFinalization.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageFinalization.Margin = new System.Windows.Forms.Padding(4);
             this.tabPageFinalization.Name = "tabPageFinalization";
-            this.tabPageFinalization.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPageFinalization.Padding = new System.Windows.Forms.Padding(4);
             this.tabPageFinalization.Size = new System.Drawing.Size(1043, 239);
             this.tabPageFinalization.TabIndex = 2;
             this.tabPageFinalization.Text = "Финализация";
             this.tabPageFinalization.UseVisualStyleBackColor = true;
             // 
+            // AcceptRevisionsCheckBox
+            // 
+            this.AcceptRevisionsCheckBox.AutoSize = true;
+            this.AcceptRevisionsCheckBox.Location = new System.Drawing.Point(9, 65);
+            this.AcceptRevisionsCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.AcceptRevisionsCheckBox.Name = "AcceptRevisionsCheckBox";
+            this.AcceptRevisionsCheckBox.Size = new System.Drawing.Size(173, 20);
+            this.AcceptRevisionsCheckBox.TabIndex = 3;
+            this.AcceptRevisionsCheckBox.Text = "Принять исправления";
+            this.AcceptRevisionsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // FinalizeButton
             // 
             this.FinalizeButton.Location = new System.Drawing.Point(445, 201);
-            this.FinalizeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FinalizeButton.Margin = new System.Windows.Forms.Padding(4);
             this.FinalizeButton.Name = "FinalizeButton";
             this.FinalizeButton.Size = new System.Drawing.Size(145, 28);
             this.FinalizeButton.TabIndex = 2;
@@ -394,7 +407,7 @@
             // 
             this.RemoveCommentsCheckBox.AutoSize = true;
             this.RemoveCommentsCheckBox.Location = new System.Drawing.Point(9, 37);
-            this.RemoveCommentsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RemoveCommentsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.RemoveCommentsCheckBox.Name = "RemoveCommentsCheckBox";
             this.RemoveCommentsCheckBox.Size = new System.Drawing.Size(175, 20);
             this.RemoveCommentsCheckBox.TabIndex = 1;
@@ -405,7 +418,7 @@
             // 
             this.RemoveHighLightsCheckBox.AutoSize = true;
             this.RemoveHighLightsCheckBox.Location = new System.Drawing.Point(9, 9);
-            this.RemoveHighLightsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RemoveHighLightsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.RemoveHighLightsCheckBox.Name = "RemoveHighLightsCheckBox";
             this.RemoveHighLightsCheckBox.Size = new System.Drawing.Size(202, 20);
             this.RemoveHighLightsCheckBox.TabIndex = 0;
@@ -425,7 +438,7 @@
             // MarkersFormatTextBox
             // 
             this.MarkersFormatTextBox.Location = new System.Drawing.Point(285, 49);
-            this.MarkersFormatTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MarkersFormatTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.MarkersFormatTextBox.Name = "MarkersFormatTextBox";
             this.MarkersFormatTextBox.Size = new System.Drawing.Size(605, 22);
             this.MarkersFormatTextBox.TabIndex = 18;
@@ -434,7 +447,7 @@
             // UpdateMarkerFormatRegexButton
             // 
             this.UpdateMarkerFormatRegexButton.Location = new System.Drawing.Point(900, 49);
-            this.UpdateMarkerFormatRegexButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UpdateMarkerFormatRegexButton.Margin = new System.Windows.Forms.Padding(4);
             this.UpdateMarkerFormatRegexButton.Name = "UpdateMarkerFormatRegexButton";
             this.UpdateMarkerFormatRegexButton.Size = new System.Drawing.Size(100, 28);
             this.UpdateMarkerFormatRegexButton.TabIndex = 19;
@@ -442,16 +455,16 @@
             this.UpdateMarkerFormatRegexButton.UseVisualStyleBackColor = true;
             this.UpdateMarkerFormatRegexButton.Click += new System.EventHandler(this.UpdateMarkerFormatRegexButton_Click);
             // 
-            // AcceptRevisionsCheckBox
+            // UpdateFieldsCheckBox
             // 
-            this.AcceptRevisionsCheckBox.AutoSize = true;
-            this.AcceptRevisionsCheckBox.Location = new System.Drawing.Point(9, 65);
-            this.AcceptRevisionsCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.AcceptRevisionsCheckBox.Name = "AcceptRevisionsCheckBox";
-            this.AcceptRevisionsCheckBox.Size = new System.Drawing.Size(173, 20);
-            this.AcceptRevisionsCheckBox.TabIndex = 3;
-            this.AcceptRevisionsCheckBox.Text = "Принять исправления";
-            this.AcceptRevisionsCheckBox.UseVisualStyleBackColor = true;
+            this.UpdateFieldsCheckBox.AutoSize = true;
+            this.UpdateFieldsCheckBox.Location = new System.Drawing.Point(8, 93);
+            this.UpdateFieldsCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.UpdateFieldsCheckBox.Name = "UpdateFieldsCheckBox";
+            this.UpdateFieldsCheckBox.Size = new System.Drawing.Size(127, 20);
+            this.UpdateFieldsCheckBox.TabIndex = 4;
+            this.UpdateFieldsCheckBox.Text = "Обновить поля";
+            this.UpdateFieldsCheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -468,7 +481,7 @@
             this.Controls.Add(this.InputDirPathFindButton);
             this.Controls.Add(this.InputDirPathTextBox);
             this.Controls.Add(this.InputDirLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Docx-replacer";
             this.tabControl1.ResumeLayout(false);
@@ -519,6 +532,7 @@
         private System.Windows.Forms.CheckBox RemoveHighLightsCheckBox;
         private System.Windows.Forms.CheckBox CheckRevisionsCheckBox;
         private System.Windows.Forms.CheckBox AcceptRevisionsCheckBox;
+        private System.Windows.Forms.CheckBox UpdateFieldsCheckBox;
     }
 }
 
