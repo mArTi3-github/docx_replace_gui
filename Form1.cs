@@ -100,45 +100,7 @@ namespace docx_replace_GUI
 
             if (MakeBackupCheckBox.Checked)
             {
-                try
-                {
-                    if (!Directory.Exists(BackupPathString))
-                        Directory.CreateDirectory(BackupPathString);
-
-                    if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
-                    {
-                        DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, файлы с одинаковыми именами в папке для бекапа при копировании будут заменены, продолжить?", "Предупреждение", MessageBoxButtons.OKCancel);
-                        if (dr == DialogResult.OK)
-                        {
-                            try
-                            {
-                                Directory.Delete(BackupPathString, true);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Не удалось очистить папку с резервными копиями");
-                                WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
-                                return;
-                            }
-
-                        }
-                        else if (dr == DialogResult.Cancel)
-                        {
-                            return;
-                        }
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Не удалось создать папку для резервных копий документов");
-                    WorklogTextBox.Text += ex.Message;
-                    return;
-                }
-                DirectoryInfo srcDI = new DirectoryInfo(InputDirPathTextBox.Text);
-                DirectoryInfo destDI = new DirectoryInfo(BackupPathString);
-                CopyAllDocx(srcDI, destDI);
-                WorklogTextBox.Text += "Входные файлы скопированы в  \"" + destDI.FullName + "\"\r\n";
+                BackupInputDocs();
             }
 
             string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
@@ -267,6 +229,11 @@ namespace docx_replace_GUI
             }
 
             string InputDir = InputDirPathTextBox.Text;
+
+            if (MakeBackupCheckBox.Checked)
+            {
+                BackupInputDocs();
+            }
 
             string[] PathsToInputDocuments = Directory.GetFiles(InputDir, "*.docx", SearchOption.AllDirectories)
                                           .Where(path => path.Contains(TmpDocxFileMarker) == false)
@@ -461,6 +428,11 @@ namespace docx_replace_GUI
 
             string InputDir = InputDirPathTextBox.Text;
 
+            if (MakeBackupCheckBox.Checked)
+            {
+                BackupInputDocs();
+            }
+
             int CommentsCounter = 0;
             int RevisionsCounter = 0;
 
@@ -534,6 +506,12 @@ namespace docx_replace_GUI
                     {
                         CurDoc.Fields.Update();
                         WorklogTextBox.Text += $"- обновлены все поля\r\n";
+                    }
+
+                    if (UpdateFieldsCheckBox.Checked)
+                    {
+                        CurDoc.ExportAsFixedFormat(CurFilePath.Replace(".docx", ".pdf"), WdExportFormat.wdExportFormatPDF);
+                        WorklogTextBox.Text += $"- создана PDF-версия документа\r\n";
                     }
 
                     CurDoc.Close(SaveChanges: true);
@@ -703,22 +681,51 @@ namespace docx_replace_GUI
             return markersInDocsList;
         }
 
-        public void CopyAllDocx(DirectoryInfo source, DirectoryInfo target)
+        public void BackupInputDocs()
         {
-            Directory.CreateDirectory(target.FullName);
-            // Copy each file into the new directory.
-            foreach (FileInfo fi in source.GetFiles("*.docx", SearchOption.AllDirectories)
+            try
+            {
+                if (!Directory.Exists(BackupPathString))
+                    Directory.CreateDirectory(BackupPathString);
+
+                if (Directory.EnumerateFileSystemEntries(BackupPathString).Any())
+                {
+                    DialogResult dr = MessageBox.Show("Папка с резервными копиями не пуста, старые резервные копии будут удалены, продолжить?", "Предупреждение", MessageBoxButtons.OKCancel);
+                    if (dr == DialogResult.OK)
+                    {
+                        try
+                        {
+                            Directory.Delete(BackupPathString, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Не удалось очистить папку с резервными копиями");
+                            WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
+                            return;
+                        }
+
+                    }
+                    else if (dr == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось создать папку для резервных копий документов");
+                WorklogTextBox.Text += ex.Message;
+                return;
+            }
+            DirectoryInfo InpudDirDI = new DirectoryInfo(InputDirPathTextBox.Text);
+            DirectoryInfo BackupDirDI = new DirectoryInfo(BackupPathString);
+            foreach (FileInfo fi in InpudDirDI.GetFiles("*.docx", SearchOption.AllDirectories)
                                                       .Where(path => path.FullName.Contains(TmpDocxFileMarker) == false))
             {
-                fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+                fi.CopyTo(Path.Combine(BackupDirDI.FullName, fi.Name), true);
             }
-
-            // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAllDocx(diSourceSubDir, nextTargetSubDir);
-            }
+            WorklogTextBox.Text += "Входные файлы скопированы в  \"" + BackupDirDI.FullName + "\"\r\n";
         }
 
 

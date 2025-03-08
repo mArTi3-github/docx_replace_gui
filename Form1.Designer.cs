@@ -55,6 +55,7 @@
             this.CheckCorruptedLinksCheckBox = new System.Windows.Forms.CheckBox();
             this.CheckButton = new System.Windows.Forms.Button();
             this.tabPageFinalization = new System.Windows.Forms.TabPage();
+            this.UpdateFieldsCheckBox = new System.Windows.Forms.CheckBox();
             this.AcceptRevisionsCheckBox = new System.Windows.Forms.CheckBox();
             this.FinalizeButton = new System.Windows.Forms.Button();
             this.RemoveCommentsCheckBox = new System.Windows.Forms.CheckBox();
@@ -62,7 +63,7 @@
             this.MarkersFormatLabel = new System.Windows.Forms.Label();
             this.MarkersFormatTextBox = new System.Windows.Forms.TextBox();
             this.UpdateMarkerFormatRegexButton = new System.Windows.Forms.Button();
-            this.UpdateFieldsCheckBox = new System.Windows.Forms.CheckBox();
+            this.ExportToPDFCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPageReplace.SuspendLayout();
             this.tabPageCheck.SuspendLayout();
@@ -367,6 +368,7 @@
             // 
             // tabPageFinalization
             // 
+            this.tabPageFinalization.Controls.Add(this.ExportToPDFCheckBox);
             this.tabPageFinalization.Controls.Add(this.UpdateFieldsCheckBox);
             this.tabPageFinalization.Controls.Add(this.AcceptRevisionsCheckBox);
             this.tabPageFinalization.Controls.Add(this.FinalizeButton);
@@ -380,6 +382,17 @@
             this.tabPageFinalization.TabIndex = 2;
             this.tabPageFinalization.Text = "Финализация";
             this.tabPageFinalization.UseVisualStyleBackColor = true;
+            // 
+            // UpdateFieldsCheckBox
+            // 
+            this.UpdateFieldsCheckBox.AutoSize = true;
+            this.UpdateFieldsCheckBox.Location = new System.Drawing.Point(9, 93);
+            this.UpdateFieldsCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.UpdateFieldsCheckBox.Name = "UpdateFieldsCheckBox";
+            this.UpdateFieldsCheckBox.Size = new System.Drawing.Size(127, 20);
+            this.UpdateFieldsCheckBox.TabIndex = 4;
+            this.UpdateFieldsCheckBox.Text = "Обновить поля";
+            this.UpdateFieldsCheckBox.UseVisualStyleBackColor = true;
             // 
             // AcceptRevisionsCheckBox
             // 
@@ -455,16 +468,16 @@
             this.UpdateMarkerFormatRegexButton.UseVisualStyleBackColor = true;
             this.UpdateMarkerFormatRegexButton.Click += new System.EventHandler(this.UpdateMarkerFormatRegexButton_Click);
             // 
-            // UpdateFieldsCheckBox
+            // ExportToPDFCheckBox
             // 
-            this.UpdateFieldsCheckBox.AutoSize = true;
-            this.UpdateFieldsCheckBox.Location = new System.Drawing.Point(8, 93);
-            this.UpdateFieldsCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.UpdateFieldsCheckBox.Name = "UpdateFieldsCheckBox";
-            this.UpdateFieldsCheckBox.Size = new System.Drawing.Size(127, 20);
-            this.UpdateFieldsCheckBox.TabIndex = 4;
-            this.UpdateFieldsCheckBox.Text = "Обновить поля";
-            this.UpdateFieldsCheckBox.UseVisualStyleBackColor = true;
+            this.ExportToPDFCheckBox.AutoSize = true;
+            this.ExportToPDFCheckBox.Location = new System.Drawing.Point(9, 121);
+            this.ExportToPDFCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.ExportToPDFCheckBox.Name = "ExportToPDFCheckBox";
+            this.ExportToPDFCheckBox.Size = new System.Drawing.Size(179, 20);
+            this.ExportToPDFCheckBox.TabIndex = 5;
+            this.ExportToPDFCheckBox.Text = "Экспортировать в PDF";
+            this.ExportToPDFCheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -533,6 +546,7 @@
         private System.Windows.Forms.CheckBox CheckRevisionsCheckBox;
         private System.Windows.Forms.CheckBox AcceptRevisionsCheckBox;
         private System.Windows.Forms.CheckBox UpdateFieldsCheckBox;
+        private System.Windows.Forms.CheckBox ExportToPDFCheckBox;
     }
 }
 
