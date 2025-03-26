@@ -168,7 +168,7 @@
             this.MakeBackupCheckBox.AutoSize = true;
             this.MakeBackupCheckBox.Checked = true;
             this.MakeBackupCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.MakeBackupCheckBox.Location = new System.Drawing.Point(207, 96);
+            this.MakeBackupCheckBox.Location = new System.Drawing.Point(222, 96);
             this.MakeBackupCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.MakeBackupCheckBox.Name = "MakeBackupCheckBox";
             this.MakeBackupCheckBox.Size = new System.Drawing.Size(174, 20);
