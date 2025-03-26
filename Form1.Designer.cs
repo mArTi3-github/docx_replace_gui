@@ -55,6 +55,7 @@
             this.CheckCorruptedLinksCheckBox = new System.Windows.Forms.CheckBox();
             this.CheckButton = new System.Windows.Forms.Button();
             this.tabPageFinalization = new System.Windows.Forms.TabPage();
+            this.ExportToPDFCheckBox = new System.Windows.Forms.CheckBox();
             this.UpdateFieldsCheckBox = new System.Windows.Forms.CheckBox();
             this.AcceptRevisionsCheckBox = new System.Windows.Forms.CheckBox();
             this.FinalizeButton = new System.Windows.Forms.Button();
@@ -63,7 +64,6 @@
             this.MarkersFormatLabel = new System.Windows.Forms.Label();
             this.MarkersFormatTextBox = new System.Windows.Forms.TextBox();
             this.UpdateMarkerFormatRegexButton = new System.Windows.Forms.Button();
-            this.ExportToPDFCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPageReplace.SuspendLayout();
             this.tabPageCheck.SuspendLayout();
@@ -168,7 +168,7 @@
             this.MakeBackupCheckBox.AutoSize = true;
             this.MakeBackupCheckBox.Checked = true;
             this.MakeBackupCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.MakeBackupCheckBox.Location = new System.Drawing.Point(33, 112);
+            this.MakeBackupCheckBox.Location = new System.Drawing.Point(207, 96);
             this.MakeBackupCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.MakeBackupCheckBox.Name = "MakeBackupCheckBox";
             this.MakeBackupCheckBox.Size = new System.Drawing.Size(174, 20);
@@ -261,7 +261,6 @@
             this.tabPageReplace.Controls.Add(this.GetAllMarkersButton);
             this.tabPageReplace.Controls.Add(this.ReplaceButton);
             this.tabPageReplace.Controls.Add(this.TextBlocksDocFindButton);
-            this.tabPageReplace.Controls.Add(this.MakeBackupCheckBox);
             this.tabPageReplace.Controls.Add(this.TextBlocksDocPathTextBox);
             this.tabPageReplace.Controls.Add(this.TextBlocksPathLabel);
             this.tabPageReplace.Location = new System.Drawing.Point(4, 25);
@@ -383,6 +382,17 @@
             this.tabPageFinalization.Text = "Финализация";
             this.tabPageFinalization.UseVisualStyleBackColor = true;
             // 
+            // ExportToPDFCheckBox
+            // 
+            this.ExportToPDFCheckBox.AutoSize = true;
+            this.ExportToPDFCheckBox.Location = new System.Drawing.Point(9, 121);
+            this.ExportToPDFCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.ExportToPDFCheckBox.Name = "ExportToPDFCheckBox";
+            this.ExportToPDFCheckBox.Size = new System.Drawing.Size(179, 20);
+            this.ExportToPDFCheckBox.TabIndex = 5;
+            this.ExportToPDFCheckBox.Text = "Экспортировать в PDF";
+            this.ExportToPDFCheckBox.UseVisualStyleBackColor = true;
+            // 
             // UpdateFieldsCheckBox
             // 
             this.UpdateFieldsCheckBox.AutoSize = true;
@@ -468,17 +478,6 @@
             this.UpdateMarkerFormatRegexButton.UseVisualStyleBackColor = true;
             this.UpdateMarkerFormatRegexButton.Click += new System.EventHandler(this.UpdateMarkerFormatRegexButton_Click);
             // 
-            // ExportToPDFCheckBox
-            // 
-            this.ExportToPDFCheckBox.AutoSize = true;
-            this.ExportToPDFCheckBox.Location = new System.Drawing.Point(9, 121);
-            this.ExportToPDFCheckBox.Margin = new System.Windows.Forms.Padding(4);
-            this.ExportToPDFCheckBox.Name = "ExportToPDFCheckBox";
-            this.ExportToPDFCheckBox.Size = new System.Drawing.Size(179, 20);
-            this.ExportToPDFCheckBox.TabIndex = 5;
-            this.ExportToPDFCheckBox.Text = "Экспортировать в PDF";
-            this.ExportToPDFCheckBox.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -491,6 +490,7 @@
             this.Controls.Add(this.ShowWordWindowsCheckBox);
             this.Controls.Add(this.WorklogLabel);
             this.Controls.Add(this.WorklogTextBox);
+            this.Controls.Add(this.MakeBackupCheckBox);
             this.Controls.Add(this.InputDirPathFindButton);
             this.Controls.Add(this.InputDirPathTextBox);
             this.Controls.Add(this.InputDirLabel);
