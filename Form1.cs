@@ -20,6 +20,7 @@ namespace docx_replace_GUI
     {
         //Путь для сохранения резульатов задается жестко, чтобы случайно не удалить ничего лишнего
         string BackupPathString = "backup";
+        bool BackupSuccess = false;
         Regex markerRegex;
         string TmpDocxFileMarker = @"\~$";
         int TooManyInputFilesThreshold = 30;
@@ -100,7 +101,12 @@ namespace docx_replace_GUI
 
             if (MakeBackupCheckBox.Checked)
             {
-                BackupInputDocs();
+                BackupSuccess = BackupInputDocs();
+                if (!BackupSuccess)
+                {
+                    MessageBox.Show("Не удалось создать резервные копии документов, отмена запуска");
+                    return;
+                }
             }
 
             string[] pathsToInputDocuments = Directory.GetFiles(inputDir, "*.docx", SearchOption.AllDirectories)
@@ -232,7 +238,12 @@ namespace docx_replace_GUI
 
             if (MakeBackupCheckBox.Checked)
             {
-                BackupInputDocs();
+                BackupSuccess = BackupInputDocs();
+                if (!BackupSuccess)
+                {
+                    MessageBox.Show("Не удалось создать резервные копии документов, отмена запуска");
+                    return;
+                }
             }
 
             string[] PathsToInputDocuments = Directory.GetFiles(InputDir, "*.docx", SearchOption.AllDirectories)
@@ -430,7 +441,12 @@ namespace docx_replace_GUI
 
             if (MakeBackupCheckBox.Checked)
             {
-                BackupInputDocs();
+                BackupSuccess = BackupInputDocs();
+                if (!BackupSuccess)
+                {
+                    MessageBox.Show("Не удалось создать резервные копии документов, отмена запуска");
+                    return;
+                }
             }
 
             int CommentsCounter = 0;
@@ -681,7 +697,7 @@ namespace docx_replace_GUI
             return markersInDocsList;
         }
 
-        public void BackupInputDocs()
+        public bool BackupInputDocs()
         {
             try
             {
@@ -701,13 +717,13 @@ namespace docx_replace_GUI
                         {
                             MessageBox.Show("Не удалось очистить папку с резервными копиями");
                             WorklogLabel.Text += "Не удалось очистить папку с резервными копиями, возникло следующее исключение:\r\n" + ex.Message;
-                            return;
+                            return false;
                         }
 
                     }
-                    else if (dr == DialogResult.Cancel)
+                    else
                     {
-                        return;
+                        return false;
                     }
                 }
 
@@ -716,7 +732,7 @@ namespace docx_replace_GUI
             {
                 MessageBox.Show("Не удалось создать папку для резервных копий документов");
                 WorklogTextBox.Text += ex.Message;
-                return;
+                return false;
             }
             DirectoryInfo InpudDirDI = new DirectoryInfo(InputDirPathTextBox.Text);
             DirectoryInfo BackupDirDI = new DirectoryInfo(BackupPathString);
@@ -726,6 +742,7 @@ namespace docx_replace_GUI
                 fi.CopyTo(Path.Combine(BackupDirDI.FullName, fi.Name), true);
             }
             WorklogTextBox.Text += "Входные файлы скопированы в  \"" + BackupDirDI.FullName + "\"\r\n";
+            return true;
         }
 
 
