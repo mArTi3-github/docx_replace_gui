@@ -712,6 +712,7 @@ namespace docx_replace_GUI
                         try
                         {
                             Directory.Delete(BackupPathString, true);
+                            Directory.CreateDirectory(BackupPathString);
                         }
                         catch (Exception ex)
                         {
